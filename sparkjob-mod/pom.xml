@@ -27,37 +27,26 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.mongodb.spark</groupId>
-      <artifactId>mongo-spark-connector_2.10</artifactId>
-      <version>0.2</version>
-    </dependency>
 
-    <dependency>
-      <groupId>org.apache.iceberg</groupId>
-      <artifactId>iceberg-core</artifactId>
-      <version>0.11.1</version>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.apache.iceberg/iceberg-spark -->
-    <dependency>
-      <groupId>org.apache.iceberg</groupId>
-      <artifactId>iceberg-spark</artifactId>
-      <version>0.11.1</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-sql_2.12</artifactId>
+      <artifactId>spark-sql-kafka-0-10_2.12</artifactId>
       <version>3.1.2</version>
-      <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.12</artifactId>
+      <artifactId>spark-avro_2.12</artifactId>
       <version>3.1.2</version>
-      <scope>provided</scope>
-
     </dependency>
+
+    <dependency>
+      <groupId>io.siddhi.extension.io.kafka</groupId>
+      <artifactId>siddhi-io-kafka</artifactId>
+      <version>5.0.12</version>
+    </dependency>
+
+
     <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-aws -->
     <dependency>
       <groupId>org.apache.hadoop</groupId>
@@ -76,14 +65,14 @@
       <artifactId>failureaccess</artifactId>
       <version>1.0.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_2.12</artifactId>
+      <version>3.1.2</version>
+    </dependency>
 
 
     <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-      <version>8.9.0</version>
-    </dependency>
 
   </dependencies>
 

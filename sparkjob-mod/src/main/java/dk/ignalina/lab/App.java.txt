@@ -1,0 +1,39 @@
+package dk.ignalina.lab;
+
+import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.avro.functions.*;
+
+import org.apache.avro.Schema
+import org.apache.avro.generic.GenericRecord
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession
+
+import org.apache.spark.sql.SparkSession;
+
+public class App {
+
+	    public static void main(String[] args) {
+            SparkSession spark;
+
+            spark = SparkSession.builder()
+//                    .master("local")
+                    .appName("Welder")
+                    .getOrCreate();
+
+            spark.sparkContext().setLogLevel("ERROR");
+
+            Dataset<Row>  ds=spark.readStream()
+                    .format("kafka")
+                    .option("kafka.bootstrap.servers", "10.1.1.90:9092")
+                    .option("subscribe", "topic")
+                    .option("startingOffsets", "earliest") // From starting
+                    .load();
+
+            ds.printSchema();
+
+        }
+
+
+
+    }
