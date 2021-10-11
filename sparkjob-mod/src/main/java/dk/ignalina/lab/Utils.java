@@ -12,7 +12,7 @@ public class Utils {
         public String topic="topic";
         public String format;
         public String bootstrap_servers="10.1.1.90:9092";
-        public String subscribe;
+
         public String schemaRegistryURL="10.1.1.90:8081";
         public String subjectValueName;
         public String checkpointDir;
@@ -27,15 +27,14 @@ public class Utils {
     static public  Config parToConfig(String[] args) {
         Config config=new Config();
 
-        config.topic=args[1];
-        config.format=args[2];
-        config.bootstrap_servers=args[3];
-        config.subscribe=args[4];;
-        config.schemaRegistryURL=args[5];;
-        config.subjectValueName=args[6];;
-        config.checkpointDir=args[7];;
 
-        return null;
+        config.topic=args[0];
+        config.format=args[1];
+        config.bootstrap_servers=args[2];
+        config.schemaRegistryURL=args[3];;
+        config.subjectValueName=args[4];;
+        config.checkpointDir=args[5];;
+        return config;
     }
 
 }
