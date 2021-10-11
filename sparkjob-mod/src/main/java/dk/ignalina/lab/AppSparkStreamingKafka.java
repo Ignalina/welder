@@ -48,7 +48,7 @@ public class AppSparkStreamingKafka {
                 .format("kafka")
                 .option("kafka.bootstrap.servers", config.bootstrap_servers)
                 .option("subscribe", config.topic )
-                .option("startingOffsets", "earliest") // From starting
+                .option("startingOffsets", config.startingOffsets) // From starting
                 .load();
 
         ds.printSchema();

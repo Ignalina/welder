@@ -15,6 +15,8 @@ public class Utils {
 
         public String schemaRegistryURL="10.1.1.90:8081";
         public String subjectValueName;
+        public String startingOffsets;
+
         public String checkpointDir;
     }
 
@@ -33,7 +35,8 @@ public class Utils {
         config.bootstrap_servers=args[2];
         config.schemaRegistryURL=args[3];;
         config.subjectValueName=args[4];;
-        config.checkpointDir=args[5];;
+        config.checkpointDir=args[5];
+        config.startingOffsets=args[6];
         return config;
     }
 
