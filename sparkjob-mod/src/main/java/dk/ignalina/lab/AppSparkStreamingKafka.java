@@ -34,10 +34,11 @@ public class AppSparkStreamingKafka {
 
     public static void main(String[] args) {
         config=Utils.parToConfig(args);
+
         SparkSession spark;
 
         spark = SparkSession.builder()
-//                    .master("local")
+                    .master("local")
                 .appName("Welder")
                 .getOrCreate();
 

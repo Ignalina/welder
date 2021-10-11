@@ -21,7 +21,7 @@ public class Utils {
     static   public  String getLastestSchema(Config config) throws IOException, RestClientException {
         RestService rs = new RestService(config.schemaRegistryURL);
         Schema valueRestResponseSchema = rs.getLatestVersion(config.subjectValueName);
-        return valueRestResponseSchema.toString();
+        return valueRestResponseSchema.getSchema().toString();
     }
 
     static public  Config parToConfig(String[] args) {
