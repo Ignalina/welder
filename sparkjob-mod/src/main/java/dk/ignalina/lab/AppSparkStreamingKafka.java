@@ -68,7 +68,7 @@ public class AppSparkStreamingKafka {
         StreamingQuery streamingQuery=null;
 
         try {
-            streamingQuery=rowDS.writeStream().format("console").outputMode("complete").trigger(Trigger.ProcessingTime("1 second"))  .option("checkpointLocation", config.checkpointDir).start();
+            streamingQuery=rowDS.writeStream().format("console").outputMode("append").trigger(Trigger.ProcessingTime("1 second"))  .option("checkpointLocation", config.checkpointDir).start();
         } catch (TimeoutException e) {
             e.printStackTrace();
         }
