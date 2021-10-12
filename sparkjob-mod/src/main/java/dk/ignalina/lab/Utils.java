@@ -18,7 +18,7 @@ public class Utils {
         public String startingOffsets;
 
         public String checkpointDir;
-        public String mode="";
+        public String mode="PERMISSIVE";
     }
 
     static   public  String getLastestSchema(Config config) throws IOException, RestClientException {
