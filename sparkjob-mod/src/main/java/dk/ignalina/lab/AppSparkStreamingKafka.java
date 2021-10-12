@@ -50,6 +50,7 @@ public class AppSparkStreamingKafka {
                 .option("subscribe", config.topic )
                 .option("startingOffsets", config.startingOffsets) // From starting
                 .option("mode",config.mode)
+                .option("failOnDataLoss", "false")
                 .load();
 
         ds.printSchema();
