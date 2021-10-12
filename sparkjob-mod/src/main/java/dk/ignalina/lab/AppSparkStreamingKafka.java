@@ -42,7 +42,8 @@ public class AppSparkStreamingKafka {
                 .appName("Welder")
                 .getOrCreate();
 
-        spark.sparkContext().setLogLevel("ERROR");
+        spark.sparkContext().setLogLevel("INFO");
+        spark.log().info("Hello demo");
 
         Dataset<Row> ds = spark.readStream()
                 .format("kafka")
@@ -54,6 +55,8 @@ public class AppSparkStreamingKafka {
                 .load();
 
         ds.printSchema();
+
+        System.out.println("V0042");
 
         String jsonFormatSchema = null;
         Dataset<Row> rowDS=null;
