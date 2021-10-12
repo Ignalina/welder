@@ -18,6 +18,7 @@ public class Utils {
         public String startingOffsets;
 
         public String checkpointDir;
+        public String mode="";
     }
 
     static   public  String getLastestSchema(Config config) throws IOException, RestClientException {
@@ -37,6 +38,7 @@ public class Utils {
         config.subjectValueName=args[4];;
         config.checkpointDir=args[5];
         config.startingOffsets=args[6];
+        config.mode=args[7];
         return config;
     }
 

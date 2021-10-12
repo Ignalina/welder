@@ -49,6 +49,7 @@ public class AppSparkStreamingKafka {
                 .option("kafka.bootstrap.servers", config.bootstrap_servers)
                 .option("subscribe", config.topic )
                 .option("startingOffsets", config.startingOffsets) // From starting
+                .option("mode",config.mode)
                 .load();
 
         ds.printSchema();
