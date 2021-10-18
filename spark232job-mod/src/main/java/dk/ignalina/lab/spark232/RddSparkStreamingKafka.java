@@ -127,9 +127,12 @@ private static Injection<GenericRecord, byte[]> recordInjection;
             });
         });
 
-
-
-
+        ssc.start();
+        try {
+            ssc.awaitTermination();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
     }
