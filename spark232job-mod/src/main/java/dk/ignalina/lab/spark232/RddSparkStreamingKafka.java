@@ -44,6 +44,7 @@ import com.twitter.bijection.Injection;
 import java.util.*;
 
 import org.apache.avro.generic.GenericRecord;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.spark.SparkConf;
 import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.*;
@@ -69,7 +70,7 @@ private static Injection<GenericRecord, byte[]> recordInjection;
         String jsonFormatSchema = null;
 
         try {
-            jsonFormatSchema = Utils.getLastestSchema("10.1.1.90:8081","topic");
+            jsonFormatSchema = Utils.getLastestSchema("http://10.1.1.90:8081","topic-value");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (RestClientException e) {
@@ -96,7 +97,7 @@ private static Injection<GenericRecord, byte[]> recordInjection;
         JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
 
         Map<String, Object> kafkaParams = new HashMap<>();
-        kafkaParams.put("metadata.broker.list", "localhost:9092");
+        kafkaParams.put("metadata.broker.list", config.bootstrap_servers);
         kafkaParams.put("specific.avro.reader", "true");
 
 //        kafkaParams.put("value.deserializer", "io.confluent.kafka.serializers.KafkaAvroDeserializer");
@@ -105,6 +106,7 @@ private static Injection<GenericRecord, byte[]> recordInjection;
 
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", KafkaAvroDeserializer.class);
+        kafkaParams.put(ConsumerConfig.GROUP_ID_CONFIG, "groupId");
 
 //        JavaPairInputDStream<String, byte[]> directKafkaStream = KafkaUtils.createDirectStream(ssc, String.class, byte[].class, StringDecoder.class, DefaultDecoder.class, kafkaParams, topics);
         Collection<String> topics = Arrays.asList(config.topic);
