@@ -53,6 +53,8 @@ public class AppSparkStreamingKafka {
                 .option("mode",config.mode)
                 .option("failOnDataLoss", config.failOnDataLoss)
                 .load();
+//        kafkaParams.put("value.deserializer", "io.confluent.kafka.serializers.KafkaAvroDeserializer");
+//        kafkaParams.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
       //  properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
 
