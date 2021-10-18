@@ -8,6 +8,8 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+
 import org.apache.spark.SparkConf;
 import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -60,7 +62,7 @@ private static Injection<GenericRecord, byte[]> recordInjection;
 
         kafkaParams.put("bootstrap.servers", config.bootstrap_servers);
         kafkaParams.put("key.deserializer", StringDeserializer.class);
-        kafkaParams.put("value.deserializer", StringDeserializer.class);
+        kafkaParams.put("value.deserializer", ByteArrayDeserializer.class);
         kafkaParams.put("group.id", "groupid");
         kafkaParams.put("auto.offset.reset", "latest");
         kafkaParams.put("enable.auto.commit", false);
