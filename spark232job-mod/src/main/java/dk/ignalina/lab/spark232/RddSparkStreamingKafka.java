@@ -18,6 +18,8 @@ import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.*;
 
+
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,7 +56,7 @@ private static Injection<GenericRecord, byte[]> recordInjection;
 
         SparkConf conf = new SparkConf()
                 .setAppName("kafka-sandbox")
-                .setMaster("local[*]");
+                .setMaster("cluster");
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
 
@@ -76,13 +78,24 @@ private static Injection<GenericRecord, byte[]> recordInjection;
                         ConsumerStrategies.<String, byte[]>Subscribe(topics, kafkaParams)
                 );
 
-        stream.foreachRDD(rdd -> {
-            OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
-            rdd.foreachPartition(consumerRecords -> {
-                OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
-                System.out.println(
-                        o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
-            });
+
+        stream.map(message -> recordInjection.invert(message.value()).get()).
+                foreachRDD(rdd -> {
+                    OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
+                    rdd.foreachPartition(consumerRecords -> {
+                        OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
+                        System.out.println(o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
+                        GenericRecord genericRecord=consumerRecords.next();
+
+                        System.out.println("str1= " + genericRecord.get(1 )
+                                + ", str2= " + genericRecord.get(2)
+                                + ", int1=" +genericRecord.get(3));
+
+
+                    });
+
+
+            ((CanCommitOffsets) stream.inputDStream()).commitAsync(offsetRanges);
         });
 
         ssc.start();
