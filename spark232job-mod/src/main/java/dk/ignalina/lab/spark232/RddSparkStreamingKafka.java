@@ -1,6 +1,8 @@
 package dk.ignalina.lab.spark232;
 
-
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import com.twitter.bijection.Injection;
 import com.twitter.bijection.avro.GenericAvroCodecs;
 import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
@@ -13,12 +15,23 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.execution.datasources.parquet.ParquetSchemaConverter;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.*;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
 
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 
 
 import java.io.IOException;
@@ -30,6 +43,7 @@ import java.util.Map;
 public class RddSparkStreamingKafka {
 
 private static Injection<GenericRecord, byte[]> recordInjection;
+private static Schema schema;
 
     static {
         String jsonFormatSchema = null;
@@ -43,9 +57,10 @@ private static Injection<GenericRecord, byte[]> recordInjection;
         }
 
         Schema.Parser parser = new Schema.Parser();
-        Schema schema = parser.parse(jsonFormatSchema);
-
         recordInjection = GenericAvroCodecs.toBinary(schema);
+        schema = parser.parse(jsonFormatSchema);
+
+
     }
 
     static Utils.Config config;
@@ -55,9 +70,16 @@ private static Injection<GenericRecord, byte[]> recordInjection;
         System.out.println("spark 2.3.2 RDD  streaming");
         config = Utils.parToConfig(args);
 
-        SparkConf conf = new SparkConf()
-                .setAppName("kafka-sandbox").setMaster("spark://10.1.1.190:6067");
+
+
+        SparkConf conf = new SparkConf().setAppName("kafka-sandbox").setMaster("spark://10.1.1.190:6067");
         JavaSparkContext sc = new JavaSparkContext(conf);
+        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
+
+        Dataset<Row> df = spark.read().format("avro").option("avroSchema", schema.toString()).load();
+        StructType schemaStructured=  df.schema();
+
+
         JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
 
         Map<String, Object> kafkaParams = new HashMap<>();
@@ -79,15 +101,18 @@ private static Injection<GenericRecord, byte[]> recordInjection;
                 );
 
 
-        stream.map(message -> recordInjection.invert(message. value()).get()).
+        stream.map(message -> recordInjection.invert(message.value()).get()).
                 foreachRDD( rdd -> {
 
                     rdd.foreachPartition(consumerRecords -> {
-                        GenericRecord genericRecord=consumerRecords.next();
 
-                        System.out.println("str1= " + genericRecord.get(1 )
-                                + ", str2= " + genericRecord.get(2)
-                                + ", int1=" +genericRecord.get(3));
+                        Dataset<Row> peopleDataFrame =  spark.createDataFrame(null,schemaStructured);
+
+                        //GenericRecord genericRecord=consumerRecords.next();
+                        //genericRecord.getSchema()
+                        //System.out.println("str1= " + genericRecord.get(1 )
+                        //        + ", str2= " + genericRecord.get(2)
+                        //        + ", int1=" +genericRecord.get(3));
 
 
                     });
