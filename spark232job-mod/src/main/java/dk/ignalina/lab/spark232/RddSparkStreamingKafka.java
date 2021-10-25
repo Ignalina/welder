@@ -14,6 +14,7 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.streaming.Duration;
+import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.*;
@@ -34,7 +35,7 @@ private static Injection<GenericRecord, byte[]> recordInjection;
         String jsonFormatSchema = null;
 
         try {
-            jsonFormatSchema = Utils.getLastestSchema("http://10.1.1.90:8081","topic-value");
+            jsonFormatSchema = Utils.getLastestSchema("http://10.1.1.90:8081","table_X14-value");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (RestClientException e) {
@@ -55,8 +56,7 @@ private static Injection<GenericRecord, byte[]> recordInjection;
         config = Utils.parToConfig(args);
 
         SparkConf conf = new SparkConf()
-                .setAppName("kafka-sandbox")
-                .setMaster("cluster");
+                .setAppName("kafka-sandbox").setMaster("spark://10.1.1.190:6067");
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
 
@@ -79,12 +79,10 @@ private static Injection<GenericRecord, byte[]> recordInjection;
                 );
 
 
-        stream.map(message -> recordInjection.invert(message.value()).get()).
-                foreachRDD(rdd -> {
-                    OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
+        stream.map(message -> recordInjection.invert(message. value()).get()).
+                foreachRDD( rdd -> {
+
                     rdd.foreachPartition(consumerRecords -> {
-                        OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
-                        System.out.println(o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
                         GenericRecord genericRecord=consumerRecords.next();
 
                         System.out.println("str1= " + genericRecord.get(1 )
@@ -95,10 +93,21 @@ private static Injection<GenericRecord, byte[]> recordInjection;
                     });
 
 
-            ((CanCommitOffsets) stream.inputDStream()).commitAsync(offsetRanges);
         });
 
-        ssc.start();
+        stream.foreachRDD( rdd -> {
+
+            OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
+            OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
+            System.out.println(o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
+
+            ((CanCommitOffsets) stream.inputDStream()).commitAsync(offsetRanges);
+
+            });
+
+
+
+            ssc.start();
         try {
             ssc.awaitTermination();
         } catch (InterruptedException e) {
