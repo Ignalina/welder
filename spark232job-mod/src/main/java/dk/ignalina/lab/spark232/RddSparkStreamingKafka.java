@@ -1,5 +1,9 @@
 package dk.ignalina.lab.spark232;
 
+import com.databricks.spark.avro.SchemaConverters;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.rdd.RDD;
+import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -15,6 +19,7 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -29,9 +34,10 @@ public class RddSparkStreamingKafka {
 
 private static Injection<GenericRecord, byte[]> recordInjection;
 private static Schema schema;
+private static String jsonFormatSchema = null;
+private static StructType schemaStructured = null;
 
-    static {
-        String jsonFormatSchema = null;
+    static  {
 
         try {
             jsonFormatSchema = Utils.getLastestSchema("http://10.1.1.90:8081","table_X14-value");
@@ -63,7 +69,7 @@ private static Schema schema;
 
 // Trick to get Schema in StructType form (not silly Avro form) for later Dataset creation.
         Dataset<Row> df = spark.read().format("avro").option("avroSchema", schema.toString()).load();
-        StructType schemaStructured=  df.schema();
+        RddSparkStreamingKafka. schemaStructured=  df.schema();
 
 
         JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
@@ -88,13 +94,20 @@ private static Schema schema;
 
 
         stream.map(message -> recordInjection.invert(message.value()).get()).
-// Note bad naming .. javaRDD.rdd() gives proper rdd ?!
-            foreachRDD( javaRDD -> {
-// None of line 95,96 compiles                     
-//  Possible alternative to get Schema in non avro form:   com.databricks.spark.avro.SchemaConverters.toSqlType(schema);
-                        Dataset<GenericRecord> df1 = spark.sqlContext().createDataset(javaRDD.rdd(),);
-                        Dataset<Row> df2 =  spark.createDataFrame(javaRDD,schemaStructured);
+                foreachRDD( javaRDD -> {
+                    JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
+
+//                    Dataset<GenericRecord> df1 = spark.sqlContext().createDataset(rddOfRows,schemaStructured);
+                    Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
+
+
+//                     javaRDD.foreachPartition(x-> {
+//                                avroToRowConverter(x.next(),schemaStructured ) ;
+//                            });
         });
+
+//  Possible alternative to get Schema in non avro form:   com.databricks.spark.avro.SchemaConverters.toSqlType(schema);
+
 /**
  * Update offsets if sucess storing all external
  * NOTE: Still not covered the case with half failure saving external.
@@ -123,5 +136,22 @@ private static Schema schema;
 
     }
 
+// Got this from Ram Ghadiyaram
+    private static Row avroToRowConverter(GenericRecord avroRecord,StructType structType) {
+        if (null == avroRecord) {
+            return null;
+        }
 
+        Object[] objectArray = new Object[avroRecord.getSchema().getFields().size()];
+//        StructType structType = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
+        for (Schema.Field field : avroRecord.getSchema().getFields()) {
+            if(field.schema().getType().toString().equalsIgnoreCase("STRING") || field.schema().getType().toString().equalsIgnoreCase("ENUM")){
+                objectArray[field.pos()] = ""+avroRecord.get(field.pos());
+            }else {
+                objectArray[field.pos()] = avroRecord.get(field.pos());
+            }
+        }
+
+        return new GenericRowWithSchema(objectArray, structType);
+    }
 }
