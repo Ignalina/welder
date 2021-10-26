@@ -88,15 +88,12 @@ private static Schema schema;
 
 
         stream.map(message -> recordInjection.invert(message.value()).get()).
-                foreachRDD( javaRDD -> {
-                    com.databricks.spark.avro.SchemaConverters.toSqlType(schema);  createConverterToSQL
+// Note bad naming .. javaRDD.rdd() gives proper rdd ?!
+            foreachRDD( javaRDD -> {
+// None of line 95,96 compiles                     
+//  Possible alternative to get Schema in non avro form:   com.databricks.spark.avro.SchemaConverters.toSqlType(schema);
                         Dataset<GenericRecord> df1 = spark.sqlContext().createDataset(javaRDD.rdd(),);
                         Dataset<Row> df2 =  spark.createDataFrame(javaRDD,schemaStructured);
-                        //GenericRecord genericRecord=consumerRecords.next();
-                        //genericRecord.getSchema()
-                        //System.out.println("str1= " + genericRecord.get(1 )
-                        //        + ", str2= " + genericRecord.get(2)
-                        //        + ", int1=" +genericRecord.get(3));
         });
 /**
  * Update offsets if sucess storing all external
