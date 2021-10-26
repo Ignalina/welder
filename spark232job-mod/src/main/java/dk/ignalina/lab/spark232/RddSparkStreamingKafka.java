@@ -15,30 +15,15 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.execution.datasources.parquet.ParquetSchemaConverter;
-import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
-import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.*;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.Function;
-
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RddSparkStreamingKafka {
 
@@ -76,6 +61,7 @@ private static Schema schema;
         JavaSparkContext sc = new JavaSparkContext(conf);
         SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
 
+// Trick to get Schema in StructType form (not silly Avro form) for later Dataset creation.
         Dataset<Row> df = spark.read().format("avro").option("avroSchema", schema.toString()).load();
         StructType schemaStructured=  df.schema();
 
@@ -102,23 +88,21 @@ private static Schema schema;
 
 
         stream.map(message -> recordInjection.invert(message.value()).get()).
-                foreachRDD( rdd -> {
-
-                    rdd.foreachPartition(consumerRecords -> {
-
-                        Dataset<Row> peopleDataFrame =  spark.createDataFrame(null,schemaStructured);
-
+                foreachRDD( javaRDD -> {
+                    com.databricks.spark.avro.SchemaConverters.toSqlType(schema);  createConverterToSQL
+                        Dataset<GenericRecord> df1 = spark.sqlContext().createDataset(javaRDD.rdd(),);
+                        Dataset<Row> df2 =  spark.createDataFrame(javaRDD,schemaStructured);
                         //GenericRecord genericRecord=consumerRecords.next();
                         //genericRecord.getSchema()
                         //System.out.println("str1= " + genericRecord.get(1 )
                         //        + ", str2= " + genericRecord.get(2)
                         //        + ", int1=" +genericRecord.get(3));
-
-
-                    });
-
-
         });
+/**
+ * Update offsets if sucess storing all external
+ * NOTE: Still not covered the case with half failure saving external.
+ *
+ * */
 
         stream.foreachRDD( rdd -> {
 
