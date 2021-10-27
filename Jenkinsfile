@@ -4,11 +4,11 @@ pipeline {
     stage('RUN JFROG CLI') {
       steps {
         sh '''export M2_HOME=/usr/share/java/maven-3
-cd sparkjob-mod
+cd spark232job-mod
 jfrog rt   mvn clean install
 cd ..
 
-cd sparkworker-mod
+cd spark232worker-mod
 jfrog rt   mvn clean install
 
 cd ..
