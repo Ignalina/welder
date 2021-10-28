@@ -1,8 +1,7 @@
 package dk.ignalina.lab.spark232;
 
-import com.databricks.spark.avro.SchemaConverters;
+import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Dataset;
@@ -16,9 +15,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 
-import org.apache.spark.SparkConf;
 import org.apache.spark.TaskContext;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
@@ -58,21 +55,37 @@ private static StructType schemaStructured = null;
 
 
     public static void main(String... args) {
-        System.out.println("spark 2.3.2 RDD  streaming");
+        System.out.println("spark 2.3.2 RDD kakfa V0.10+ streaming to hive");
         config = Utils.parToConfig(args);
 
 
+  //      SparkConf conf = new SparkConf().setAppName("kafka-sandbox").setMaster("spark://10.1.1.190:6067").set("spark.sql.warehouse.dir", warehouseLocation);
 
-        SparkConf conf = new SparkConf().setAppName("kafka-sandbox").setMaster("spark://10.1.1.190:6067");
-        JavaSparkContext sc = new JavaSparkContext(conf);
-        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
+        SparkSession spark = SparkSession
+                .builder()
+                .appName("Java Spark Hive Example")
+                .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
+                .master("spark://10.1.1.190:6067")
+                .enableHiveSupport()
+                .getOrCreate();
+
+        SparkContext sc = spark.sparkContext();
+
+
+
+
+//        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
+//        spark.conf().set("spark.sql.warehouse.dir", warehouseLocation);
+//        spark.conf().getAll().en
+//        .config("spark.sql.warehouse.dir", warehouseLocation)
+//                .enableHiveSupport()
+//                .getOrCreate();
 
 // Trick to get Schema in StructType form (not silly Avro form) for later Dataset creation.
         Dataset<Row> df = spark.read().format("avro").option("avroSchema", schema.toString()).load();
-        RddSparkStreamingKafka. schemaStructured=  df.schema();
-
-
+        RddSparkStreamingKafka.schemaStructured=  df.schema();
         JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
+        Utils.createHiveTable(df,config.topic,spark);
 
         Map<String, Object> kafkaParams = new HashMap<>();
 

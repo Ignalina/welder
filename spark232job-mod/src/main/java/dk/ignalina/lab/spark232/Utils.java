@@ -6,6 +6,14 @@ import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientExcept
 
 import java.io.IOException;
 
+import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
+
 public class Utils {
 
     public static class Config {
@@ -48,4 +56,12 @@ public class Utils {
         return config;
     }
 
+    static public void createHiveTable(Dataset<Row> df, String tableName,SparkSession spark) {
+        String tmpTableName="my_temp"+tableName;
+
+        df.createOrReplaceTempView(tmpTableName);
+        spark.sql("drop table if exists "+ tableName);
+        spark.sql("create table "+tableName +" as select * from "+tmpTableName);
+
+    }
 }
