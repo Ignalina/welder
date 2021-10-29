@@ -2,6 +2,7 @@ package dk.ignalina.lab.spark232;
 
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Dataset;
@@ -65,7 +66,7 @@ private static StructType schemaStructured = null;
                 .builder()
                 .appName("Java Spark Hive Example")
                 .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
-                .master("spark://10.1.1.190:6067")
+                .master("spark://10.1.1.190:6066")
                 .enableHiveSupport()
                 .getOrCreate();
 
@@ -84,7 +85,7 @@ private static StructType schemaStructured = null;
 // Trick to get Schema in StructType form (not silly Avro form) for later Dataset creation.
         Dataset<Row> df = spark.read().format("avro").option("avroSchema", schema.toString()).load();
         RddSparkStreamingKafka.schemaStructured=  df.schema();
-        JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
+        JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
         Utils.createHiveTable(df,config.topic,spark);
 
         Map<String, Object> kafkaParams = new HashMap<>();
