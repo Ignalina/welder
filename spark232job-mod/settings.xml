@@ -31,6 +31,11 @@
                     <name>your custom repo</name>
                     <url>https://packages.confluent.io/maven/</url>
                 </repository>
+                <repository>
+                    <id>my-repo3</id>
+                    <name>your custom repo</name>
+                    <url>https://mvnrepository.com/artifact/maven/</url>
+                </repository>
 
             </repositories>
 
