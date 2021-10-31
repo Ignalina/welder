@@ -8,7 +8,7 @@
 
               <repositories>
 
-                <repository>
+                        <repository>
                     <id>my-repo0</id>
                     <name>Googles fast mirror</name>
                     <url>https://maven-central-eu.storage-download.googleapis.com/</url>
@@ -34,8 +34,17 @@
                 <repository>
                     <id>my-repo4</id>
                     <name>your custom repo</name>
-                    <url>https://mvnrepository.com/artifact</url>
+                    <url>https://mvnrepository.com/artifact/maven/</url>                 
+               </repository>
+               
+                      
+                  <repository>
+                    <id>my-repo5</id>
+                    <name>your custom repo</name>
+                    <url>https://jcenter.bintray.com</url>
                 </repository>
+
+                      
 
             </repositories>
 
