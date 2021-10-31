@@ -43,6 +43,14 @@
                     <url>https://jcenter.bintray.com</url>
                 </repository>
 
+                <repository>
+                    <id>my-repo6</id>
+                    <name>your custom repo</name>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                </repository>
+
+                      
+
                       
                        
 
