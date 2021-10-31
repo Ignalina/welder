@@ -34,9 +34,8 @@
                 <repository>
                     <id>my-repo4</id>
                     <name>your custom repo</name>
-                    <url>https://mvnrepository.com/artifact/maven/</url>                 
+                    <url>https://mvnrepository.com/artifact</url>                 
                </repository>
-               
                       
                   <repository>
                     <id>my-repo5</id>
