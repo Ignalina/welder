@@ -4,8 +4,7 @@ pipeline {
     stage('RUN JFROG CLI') {
       steps {
         sh '''export M2_HOME=/usr/share/java/maven-3
-git clone https://github.com/Ignalina/welder.git
-cd welder 
+
 
 cd spark232job-mod
 jfrog rt   mvn clean install -U
