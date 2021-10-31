@@ -6,7 +6,7 @@
         <profile>
             <id>myprofile</id>
 
-            <repositories>
+              <repositories>
 
                 <repository>
                     <id>my-repo0</id>
@@ -30,6 +30,11 @@
                     <id>my-repo3</id>
                     <name>your custom repo</name>
                     <url>https://packages.confluent.io/maven/</url>
+                </repository>
+                <repository>
+                    <id>my-repo4</id>
+                    <name>your custom repo</name>
+                    <url>https://mvnrepository.com/artifact/maven/</url>
                 </repository>
 
             </repositories>
