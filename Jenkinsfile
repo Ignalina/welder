@@ -15,6 +15,9 @@ jfrog rt   mvn clean install
 
 cd ..
 
+
+ssh spark@10.1.1.190 \'/home/hadoop/welder_load.sh\'
+
 '''
       }
     }
