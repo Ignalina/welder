@@ -83,8 +83,11 @@ private static StructType schemaStructured = null;
 //                .getOrCreate();
 
 // Trick to get Schema in StructType form (not silly Avro form) for later Dataset creation.
-        Dataset<Row> df = spark.read().format("com.databricks.spark.avro").option("avroSchema", schema.toString()).load();
-        RddSparkStreamingKafka.schemaStructured=  df.schema();
+//        Dataset<Row> df = spark.read().format("com.databricks.spark.avro").option("avroSchema", schema.toString()).load();
+//        RddSparkStreamingKafka.schemaStructured=  df.schema();
+
+        StructType structType = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
+
         JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
         Utils.createHiveTable(df,config.topic,spark);
 
@@ -157,7 +160,7 @@ private static StructType schemaStructured = null;
         }
 
         Object[] objectArray = new Object[avroRecord.getSchema().getFields().size()];
-//        StructType structType = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
+        StructType structType = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
         for (Schema.Field field : avroRecord.getSchema().getFields()) {
             if(field.schema().getType().toString().equalsIgnoreCase("STRING") || field.schema().getType().toString().equalsIgnoreCase("ENUM")){
                 objectArray[field.pos()] = ""+avroRecord.get(field.pos());
