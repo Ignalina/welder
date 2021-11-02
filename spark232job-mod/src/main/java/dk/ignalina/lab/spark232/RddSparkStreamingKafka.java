@@ -1,5 +1,6 @@
 package dk.ignalina.lab.spark232;
 
+import com.databricks.spark.avro.SchemaConverters;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -83,12 +84,15 @@ private static StructType schemaStructured = null;
 //                .getOrCreate();
 
 // Trick to get Schema in StructType form (not silly Avro form) for later Dataset creation.
-//        Dataset<Row> df = spark.read().format("com.databricks.spark.avro").option("avroSchema", schema.toString()).load();
-//        RddSparkStreamingKafka.schemaStructured=  df.schema();
+        Dataset<Row> df = spark.read().format("com.databricks.spark.avro").option("avroSchema", schema.toString()).load();
+       RddSparkStreamingKafka.schemaStructured=  df.schema();
 
-        RddSparkStreamingKafka.schemaStructured = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
+//        RddSparkStreamingKafka.schemaStructured = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
 
         JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
+
+
+
         Utils.createHiveTable(df,config.topic,spark);
 
         Map<String, Object> kafkaParams = new HashMap<>();
