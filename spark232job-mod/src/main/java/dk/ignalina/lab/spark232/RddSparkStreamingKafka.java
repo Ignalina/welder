@@ -65,9 +65,9 @@ private static StructType schemaStructured = null;
 
         SparkSession spark = SparkSession
                 .builder()
-                .appName("Java Spark Hive Example")
+                .appName("spark 2.3.2 streaming job")
                 .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
-                .master("spark://10.1.1.190:6066")
+                .master("spark://10.1.1.190:6067")
                 .enableHiveSupport()
                 .getOrCreate();
 
