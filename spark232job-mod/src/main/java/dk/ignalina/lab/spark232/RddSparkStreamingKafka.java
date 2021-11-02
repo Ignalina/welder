@@ -68,6 +68,7 @@ private static StructType schemaStructured = null;
                 .appName("v202111022119  spark 2.3.2 streaming job")
                 .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
                 .master("spark://10.1.1.190:6067")
+                .config("spark.submit.deployMode","cluster")
                 .enableHiveSupport()
                 .getOrCreate();
 
