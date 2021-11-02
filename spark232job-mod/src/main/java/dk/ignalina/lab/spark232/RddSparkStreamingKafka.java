@@ -160,7 +160,7 @@ private static StructType schemaStructured = null;
         }
 
         Object[] objectArray = new Object[avroRecord.getSchema().getFields().size()];
-        StructType structType = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
+//        StructType structType = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
         for (Schema.Field field : avroRecord.getSchema().getFields()) {
             if(field.schema().getType().toString().equalsIgnoreCase("STRING") || field.schema().getType().toString().equalsIgnoreCase("ENUM")){
                 objectArray[field.pos()] = ""+avroRecord.get(field.pos());
