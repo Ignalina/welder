@@ -98,11 +98,6 @@
       <version>0.10.0.0</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
-      <version>${avro.version}</version>
-    </dependency>
 
 
     <dependency>
