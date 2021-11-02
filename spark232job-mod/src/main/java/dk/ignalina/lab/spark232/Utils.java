@@ -5,6 +5,7 @@ import io.confluent.kafka.schemaregistry.client.rest.entities.Schema;
 import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
@@ -12,6 +13,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.StructType;
 
 
 public class Utils {
@@ -62,6 +64,10 @@ public class Utils {
         df.createOrReplaceTempView(tmpTableName);
         spark.sql("drop table if exists "+ tableName);
         spark.sql("create table "+tableName +" as select * from "+tmpTableName);
+
+    }
+    static public Dataset<Row> createEmptyRDD(SparkSession spark, StructType schema) {
+        return  spark.createDataFrame(new ArrayList<>(), schema);
 
     }
 }

@@ -84,14 +84,18 @@ private static StructType schemaStructured = null;
 //                .enableHiveSupport()
 //                .getOrCreate();
 
-// Trick to get Schema in StructType form (not silly Avro form) for later Dataset creation.
-        Dataset<Row> df = spark.read().format("com.databricks.spark.avro").option("avroSchema", schema.toString()).load();
-       RddSparkStreamingKafka.schemaStructured=  df.schema();
+// Trick Nr 1 to get Schema in StructType form (not silly Avro form) for later Dataset creation.
+//        Dataset<Row> df = spark.read().format("com.databricks.spark.avro").option("avroSchema", schema.toString()).load();
+//       RddSparkStreamingKafka.schemaStructured=  df.schema();
 
+// Trick Nr 2
 //        RddSparkStreamingKafka.schemaStructured = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
 
+// Trick nr 3
+        schemaStructured=(StructType) StructType.fromJson(jsonFormatSchema);
         JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
 
+        Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
 
 
         Utils.createHiveTable(df,config.topic,spark);
