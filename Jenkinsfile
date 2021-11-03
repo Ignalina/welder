@@ -5,6 +5,8 @@ pipeline {
       steps {
         sh '''export M2_HOME=/usr/share/java/maven-3
 
+rm -rf ~/.m2/repository/dk/ignalina/lab/
+
 
 cd spark232job-mod
 jfrog rt   mvn clean install -U
