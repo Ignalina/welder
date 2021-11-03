@@ -97,7 +97,17 @@ private static StructType schemaStructured = null;
         schemaStructured = Utils.avroToSparkSchema(schema);
 //        JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
-        SparkSession spark = SparkSession.getActiveSession().get();
+//        SparkSession spark = SparkSession.builder().getOrCreate(); getActiveSession().get();
+
+        SparkSession spark = SparkSession
+                .builder()
+                .appName("v202111032342  spark 2.3.2 streaming job")
+                .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
+                .master("spark://10.1.1.190:6066")
+                .config("spark.submit.deployMode","cluster")
+                .enableHiveSupport()
+                .getOrCreate();
+
 
         Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
 
