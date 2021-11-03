@@ -1,9 +1,7 @@
 package dk.ignalina.lab.spark232;
 
-import com.databricks.spark.avro.SchemaConverters;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Dataset;
@@ -33,13 +31,13 @@ public class RddSparkStreamingKafka {
 
 private static Injection<GenericRecord, byte[]> recordInjection;
 private static Schema schema;
-private static String jsonFormatSchema = null;
+private static String avroSchema = null;
 private static StructType schemaStructured = null;
 
     static  {
 
         try {
-            jsonFormatSchema = Utils.getLastestSchema("http://10.1.1.90:8081","table_X14-value");
+            avroSchema = Utils.getLastestSchema("http://10.1.1.90:8081","table_X14-value");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (RestClientException e) {
@@ -47,8 +45,9 @@ private static StructType schemaStructured = null;
         }
 
         Schema.Parser parser = new Schema.Parser();
+        schema = parser.parse(avroSchema);
+// TODO checkout https://stackoverflow.com/questions/40789153/how-to-convert-avro-schema-object-into-structtype-in-spark
         recordInjection = GenericAvroCodecs.toBinary(schema);
-        schema = parser.parse(jsonFormatSchema);
 
 
     }
@@ -65,7 +64,7 @@ private static StructType schemaStructured = null;
 
         SparkSession spark = SparkSession
                 .builder()
-                .appName("v202111022119  spark 2.3.2 streaming job")
+                .appName("v202111032153  spark 2.3.2 streaming job")
                 .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
                 .master("spark://10.1.1.190:6066")
                 .config("spark.submit.deployMode","cluster")
@@ -73,9 +72,6 @@ private static StructType schemaStructured = null;
                 .getOrCreate();
 
         SparkContext sc = spark.sparkContext();
-
-
-
 
 //        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
 //        spark.conf().set("spark.sql.warehouse.dir", warehouseLocation);
@@ -92,7 +88,11 @@ private static StructType schemaStructured = null;
 //        RddSparkStreamingKafka.schemaStructured = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
 
 // Trick nr 3
-        schemaStructured=(StructType) StructType.fromJson(jsonFormatSchema);
+//        schemaStructured=(StructType) StructType.fromJson(jsonFormatSchema);
+
+// Trick nr 4 (AH !!! FROM TRICK NR 2)
+
+        schemaStructured = Utils.avroToSparkSchema(schema);
         JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
 
         Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
@@ -132,7 +132,6 @@ private static StructType schemaStructured = null;
 //                            });
         });
 
-//  Possible alternative to get Schema in non avro form:   com.databricks.spark.avro.SchemaConverters.toSqlType(schema);
 
 /**
  * Update offsets if sucess storing all external

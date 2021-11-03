@@ -13,6 +13,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.StructType;
 
 
@@ -69,5 +70,9 @@ public class Utils {
     static public Dataset<Row> createEmptyRDD(SparkSession spark, StructType schema) {
         return  spark.createDataFrame(new ArrayList<>(), schema);
 
+    }
+
+    static public StructType avroToSparkSchema(org.apache.avro.Schema avroSchema) {
+        return (StructType) com.databricks.spark.avro.SchemaConverters.toSqlType(avroSchema).dataType();
     }
 }
