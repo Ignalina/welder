@@ -78,6 +78,7 @@ private static StructType schemaStructured = null;
         SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
         spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
         spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
+        SparkContext sc = spark.sparkContext();
 
 //        spark.conf().getAll(). .config("spark.sql.warehouse.dir", warehouseLocation)
 //                .enableHiveSupport()
@@ -96,6 +97,7 @@ private static StructType schemaStructured = null;
 // Trick nr 4 (AH !!! FROM TRICK NR 2)
 
         schemaStructured = Utils.avroToSparkSchema(schema);
+//        JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
         JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
 
         Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
