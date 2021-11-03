@@ -1,5 +1,6 @@
 package dk.ignalina.lab.spark232;
 
+import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.RowFactory;
@@ -60,9 +61,8 @@ private static StructType schemaStructured = null;
         config = Utils.parToConfig(args);
 
 
-  //      SparkConf conf = new SparkConf().setAppName("kafka-sandbox").setMaster("spark://10.1.1.190:6067").set("spark.sql.warehouse.dir", warehouseLocation);
-
-        /*
+      SparkConf conf = new SparkConf().setAppName("v202111032342  spark 2.3.2 streaming job").setMaster("spark://10.1.1.190:6067").set("spark.sql.warehouse.dir", "/apps/hive/warehouse").set("spark.submit.deployMode" , "cluster");
+/*
         SparkSession spark = SparkSession
                 .builder()
                 .appName("v202111032342  spark 2.3.2 streaming job")
@@ -71,14 +71,13 @@ private static StructType schemaStructured = null;
                 .config("spark.submit.deployMode","cluster")
                 .enableHiveSupport()
                 .getOrCreate();
-
-        SparkContext sc = spark.sparkContext();
 */
+//        SparkContext sc = spark.sparkContext();
 
-        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
-        spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
-        spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
-        SparkContext sc = spark.sparkContext();
+//        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
+//        spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
+//        spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
+//        SparkContext sc = spark.sparkContext();
 
 //        spark.conf().getAll(). .config("spark.sql.warehouse.dir", warehouseLocation)
 //                .enableHiveSupport()
@@ -98,7 +97,7 @@ private static StructType schemaStructured = null;
 
         schemaStructured = Utils.avroToSparkSchema(schema);
 //        JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
-        JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
+        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
 
         Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
 
