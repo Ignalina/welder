@@ -62,6 +62,7 @@ private static StructType schemaStructured = null;
 
   //      SparkConf conf = new SparkConf().setAppName("kafka-sandbox").setMaster("spark://10.1.1.190:6067").set("spark.sql.warehouse.dir", warehouseLocation);
 
+        /*
         SparkSession spark = SparkSession
                 .builder()
                 .appName("v202111032153  spark 2.3.2 streaming job")
@@ -72,11 +73,13 @@ private static StructType schemaStructured = null;
                 .getOrCreate();
 
         SparkContext sc = spark.sparkContext();
+*/
 
-//        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
-//        spark.conf().set("spark.sql.warehouse.dir", warehouseLocation);
-//        spark.conf().getAll().en
-//        .config("spark.sql.warehouse.dir", warehouseLocation)
+        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
+        spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
+        spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
+
+//        spark.conf().getAll(). .config("spark.sql.warehouse.dir", warehouseLocation)
 //                .enableHiveSupport()
 //                .getOrCreate();
 
