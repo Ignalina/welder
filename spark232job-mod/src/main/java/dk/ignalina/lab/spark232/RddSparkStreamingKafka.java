@@ -68,7 +68,7 @@ private static StructType schemaStructured = null;
                 .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
                 .master("spark://10.1.1.190:6066")
                 .config("spark.submit.deployMode","cluster")
-                .enableHiveSupport()
+//                .enableHiveSupport()
                 .getOrCreate();
 
         SparkContext sc = spark.sparkContext();
