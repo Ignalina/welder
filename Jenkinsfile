@@ -4,6 +4,10 @@ pipeline {
     stage('RUN JFROG CLI') {
       steps {
         sh '''export M2_HOME=/usr/share/java/maven-3
+export JFROG_CLI_BUILD_NUMBER = ${env.BUILD_NUMBER}
+export JFROG_CLI_BUILD_NAME = ${env.JOB_NAME}
+
+rm -rf ~/.m2/repository/dk/ignalina/lab/
 
 
 cd spark232job-mod
@@ -24,7 +28,7 @@ ssh hadoop@10.1.1.190 \'/home/hadoop/welder_load.sh\'
 
   }
   environment {
-    JFROG_CLI_BUILD_NAME = '${env.JOB_NAME}'
-    JFROG_CLI_BUILD_NUMBER = '${env.BUILD_NUMBER}'
+    JFROG_CLI_BUILD_NAME = 'JOB_NAME'
+    JFROG_CLI_BUILD_NUMBER = 'BUILD_NUMBER'
   }
 }
