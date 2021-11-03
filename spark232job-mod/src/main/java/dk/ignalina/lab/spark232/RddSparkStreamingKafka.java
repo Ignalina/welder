@@ -94,10 +94,10 @@ private static StructType schemaStructured = null;
 //        schemaStructured=(StructType) StructType.fromJson(jsonFormatSchema);
 
 // Trick nr 4 (AH !!! FROM TRICK NR 2)
-        SparkSession spark = SparkSession.getActiveSession().get();
         schemaStructured = Utils.avroToSparkSchema(schema);
 //        JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
+        SparkSession spark = SparkSession.getActiveSession().get();
 
         Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
 
