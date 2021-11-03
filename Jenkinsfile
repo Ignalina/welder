@@ -26,7 +26,7 @@ ssh hadoop@10.1.1.190 \'/home/hadoop/welder_load.sh\'
 
   }
   environment {
-    JFROG_CLI_BUILD_NAME = '${JOB_NAME}'
-    JFROG_CLI_BUILD_NUMBER = '${BUILD_NUMBER}'
+    JFROG_CLI_BUILD_NAME = '$JOB_NAME'
+    JFROG_CLI_BUILD_NUMBER = '$BUILD_NUMBER'
   }
 }
