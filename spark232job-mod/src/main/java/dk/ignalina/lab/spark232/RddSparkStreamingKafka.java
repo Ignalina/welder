@@ -56,7 +56,7 @@ private static StructType schemaStructured = null;
 
 
     public static void main(String... args) {
-        System.out.println("v202111032153 spark 2.3.2 RDD kakfa V0.10+ streaming to hive");
+        System.out.println("v202111032343 spark 2.3.2 RDD kakfa V0.10+ streaming to hive");
         config = Utils.parToConfig(args);
 
 
@@ -65,7 +65,7 @@ private static StructType schemaStructured = null;
         /*
         SparkSession spark = SparkSession
                 .builder()
-                .appName("v202111032153  spark 2.3.2 streaming job")
+                .appName("v202111032342  spark 2.3.2 streaming job")
                 .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
                 .master("spark://10.1.1.190:6066")
                 .config("spark.submit.deployMode","cluster")
