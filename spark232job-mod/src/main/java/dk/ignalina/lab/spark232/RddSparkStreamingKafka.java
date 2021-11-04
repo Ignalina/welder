@@ -153,6 +153,9 @@ private static StructType schemaStructured = null;
         stream.foreachRDD( rdd -> {
 
             OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
+            if(null== TaskContext.get()) {
+                return;
+            }
             OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
             System.out.println(o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
 
