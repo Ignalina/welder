@@ -61,55 +61,27 @@ private static StructType schemaStructured = null;
         config = Utils.parToConfig(args);
 
 
-      SparkConf conf = new SparkConf().setAppName("v202111032342  spark 2.3.2 streaming job").setMaster("spark://10.1.1.190:6066").set("spark.sql.warehouse.dir", "/apps/hive/warehouse").set("spark.submit.deployMode" , "cluster").set("spark.sql.catalogImplementation","hive").set("hive.metastore.uris","thrift://10.1.1.190:9083");
-/*
-        SparkSession spark = SparkSession
-                .builder()
-                .appName("v202111032342  spark 2.3.2 streaming job")
-                .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
-                .master("spark://10.1.1.190:6066")
-                .config("spark.submit.deployMode","cluster")
-                .enableHiveSupport()
-                .getOrCreate();
-*/
-//        SparkContext sc = spark.sparkContext();
-
-//        SparkSession spark = SparkSession.getActiveSession().get();// builder.config(sc.getConf).getOrCreate()
-//        spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
-//        spark.conf().set("spark.sql.warehouse.dir", "/apps/hive/warehouse");
-//        SparkContext sc = spark.sparkContext();
-
-//        spark.conf().getAll(). .config("spark.sql.warehouse.dir", warehouseLocation)
-//                .enableHiveSupport()
-//                .getOrCreate();
-
-// Trick Nr 1 to get Schema in StructType form (not silly Avro form) for later Dataset creation.
-//        Dataset<Row> df = spark.read().format("com.databricks.spark.avro").option("avroSchema", schema.toString()).load();
-//       RddSparkStreamingKafka.schemaStructured=  df.schema();
-
-// Trick Nr 2
-//        RddSparkStreamingKafka.schemaStructured = (StructType) SchemaConverters.toSqlType(avroRecord.getSchema()).dataType();
-
-// Trick nr 3
-//        schemaStructured=(StructType) StructType.fromJson(jsonFormatSchema);
-
-// Trick nr 4 (AH !!! FROM TRICK NR 2)
+      SparkConf conf = new SparkConf().setAppName("v202111032342  spark 2.3.2 streaming job").
+              setMaster("spark://10.1.1.190:6066").
+                set("spark.sql.warehouse.dir", "/apps/hive/warehouse").
+                set("spark.submit.deployMode" , "cluster").
+                set("spark.sql.catalogImplementation","hive").
+                set("hive.metastore.uris","thrift://10.1.1.190:9083").
+                set("spark.driver.supervise","true");
         schemaStructured = Utils.avroToSparkSchema(schema);
-//        JavaStreamingContext ssc = new JavaStreamingContext(sc.getConf(), new Duration(2000));
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
-//        SparkSession spark = SparkSession.builder().getOrCreate(); getActiveSession().get();
-
-        SparkSession spark = SparkSession
-                .builder()
-                .appName("v202111032342  spark 2.3.2 streaming job")
-                .config("spark.sql.warehouse.dir", "/apps/hive/warehouse")
-                .master("spark://10.1.1.190:6066")
-                .config("spark.submit.deployMode","cluster")
-                .enableHiveSupport()
-                .getOrCreate();
+        SparkSession spark = SparkSession.builder().
+                appName("v202111032342  spark 2.3.2 streaming job").
+                config("spark.sql.warehouse.dir", "/apps/hive/warehouse").
+                master("spark://10.1.1.190:6066").
+                config("spark.submit.deployMode","cluster").
+                enableHiveSupport().
+                getOrCreate();
 
 
         Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
+
+        Utils.createHiveTable(df,config.topic,spark);
 
         Map<String, Object> kafkaParams = new HashMap<>();
 
@@ -136,6 +108,7 @@ private static StructType schemaStructured = null;
 
 //                    Dataset<GenericRecord> df1 = spark.sqlContext().createDataset(rddOfRows,schemaStructured);
                     Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
+                    df2.write().saveAsTable(config.topic);
 
 
 //                     javaRDD.foreachPartition(x-> {
