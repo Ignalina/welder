@@ -111,9 +111,6 @@ private static StructType schemaStructured = null;
 
         Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
 
-
-        Utils.createHiveTable(df,config.topic,spark);
-
         Map<String, Object> kafkaParams = new HashMap<>();
 
         kafkaParams.put("bootstrap.servers", config.bootstrap_servers);
