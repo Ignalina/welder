@@ -57,18 +57,17 @@ private static StructType schemaStructured = null;
 
 
     public static void main(String... args) {
-        System.out.println("v202111061725 spark 2.3.2 RDD kakfa V0.10+ streaming to hive");
+        System.out.println("spark 2.3.2 RDD kakfa V0.10+ streaming to hive");
         config = Utils.parToConfig(args);
 
 
-      SparkConf conf = new SparkConf().setAppName("v202111061725  spark 2.3.2 streaming job").
+      SparkConf conf = new SparkConf().setAppName("v202111061807  spark 2.3.2 streaming job").
               setMaster("spark://10.1.1.190:6066").
                 set("spark.sql.warehouse.dir", "/apps/hive/warehouse").
                 set("spark.submit.deployMode" , "cluster").
                 set("spark.sql.catalogImplementation","hive").
                 set("hive.metastore.uris","thrift://10.1.1.190:9083").
                 set("spark.driver.supervise","true").
-                set("spark.hadoop.fs.default.name", "hdfs://10.1.1.190:8020").
                 set("spark.hadoop.fs.defaultFS", "hdfs://10.1.1.190:8020").
                 set("spark.hadoop.fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName()).
                 set("spark.hadoop.fs.hdfs.server", org.apache.hadoop.hdfs.server.namenode.NameNode.class.getName()).
@@ -77,7 +76,7 @@ private static StructType schemaStructured = null;
         schemaStructured = Utils.avroToSparkSchema(schema);
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
         SparkSession spark = SparkSession.builder().
-                appName("v202111061725  spark 2.3.2 streaming job").
+                appName("park 2.3.2 streaming job").
                 config("spark.sql.warehouse.dir", "/apps/hive/warehouse").
                 master("spark://10.1.1.190:6066").
                 config("spark.submit.deployMode","cluster").
