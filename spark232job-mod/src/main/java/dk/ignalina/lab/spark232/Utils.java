@@ -64,8 +64,12 @@ public class Utils {
         spark.sql("use hiveorg_prod");
 
 
+
         String tables[]=spark.sqlContext().tableNames();
-        Arrays.asList(tables).contains(tables);
+        if (Arrays.asList(tables).contains(tables)) {
+            return ;
+        }
+
         String tmpTableName="my_temp"+tableName;
 
         df.createOrReplaceTempView(tmpTableName);
