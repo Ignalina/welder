@@ -67,7 +67,13 @@ private static StructType schemaStructured = null;
                 set("spark.submit.deployMode" , "cluster").
                 set("spark.sql.catalogImplementation","hive").
                 set("hive.metastore.uris","thrift://10.1.1.190:9083").
-                set("spark.driver.supervise","true");
+                set("spark.driver.supervise","true").
+                set("spark.hadoop.fs.default.name", "hdfs://10.1.1.190:9000").
+                set("spark.hadoop.fs.defaultFS", "hdfs://10.1.1.190:9000").
+                set("spark.hadoop.fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName()).
+                set("spark.hadoop.fs.hdfs.server", org.apache.hadoop.hdfs.server.namenode.NameNode.class.getName()).
+                set("spark.hadoop.conf", org.apache.hadoop.hdfs.HdfsConfiguration.class.getName()));
+
         schemaStructured = Utils.avroToSparkSchema(schema);
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
         SparkSession spark = SparkSession.builder().
@@ -77,6 +83,9 @@ private static StructType schemaStructured = null;
                 config("spark.submit.deployMode","cluster").
                 enableHiveSupport().
                 getOrCreate();
+
+
+
 
 
         Dataset<Row> df= Utils.createEmptyRDD(spark,schemaStructured);
@@ -105,15 +114,8 @@ private static StructType schemaStructured = null;
         stream.map(message -> recordInjection.invert(message.value()).get()).
                 foreachRDD( javaRDD -> {
                     JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
-
-//                    Dataset<GenericRecord> df1 = spark.sqlContext().createDataset(rddOfRows,schemaStructured);
                     Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
                     df2.write().saveAsTable(config.topic);
-
-
-//                     javaRDD.foreachPartition(x-> {
-//                                avroToRowConverter(x.next(),schemaStructured ) ;
-//                            });
         });
 
 
