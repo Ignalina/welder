@@ -60,6 +60,8 @@ public class Utils {
     }
 
     static public void createHiveTable(Dataset<Row> df, String tableName,SparkSession spark) {
+        sc.sql("use hiveorg_prod");
+
         String tmpTableName="my_temp"+tableName;
 
         df.createOrReplaceTempView(tmpTableName);
