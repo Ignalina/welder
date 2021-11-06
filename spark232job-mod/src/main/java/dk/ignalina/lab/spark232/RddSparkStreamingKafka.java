@@ -57,7 +57,7 @@ private static StructType schemaStructured = null;
 
 
     public static void main(String... args) {
-        System.out.println("v202111032343 spark 2.3.2 RDD kakfa V0.10+ streaming to hive");
+        System.out.println("v202111061725 spark 2.3.2 RDD kakfa V0.10+ streaming to hive");
         config = Utils.parToConfig(args);
 
 
