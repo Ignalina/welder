@@ -83,6 +83,7 @@ private static StructType schemaStructured = null;
                 enableHiveSupport().
                 getOrCreate();
 
+         spark.sql("use hiveorg_prod");
 
 
 
@@ -114,7 +115,9 @@ private static StructType schemaStructured = null;
                 foreachRDD( javaRDD -> {
                     JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
                     Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
-                    df2.write().saveAsTable(config.topic);
+//                    df2.write().saveAsTable(config.topic);
+                    df2.write().insertInto(config.topic);
+
         });
 
 
