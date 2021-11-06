@@ -61,7 +61,7 @@ private static StructType schemaStructured = null;
         config = Utils.parToConfig(args);
 
 
-      SparkConf conf = new SparkConf().setAppName("v202111032342  spark 2.3.2 streaming job").
+      SparkConf conf = new SparkConf().setAppName("v202111061725  spark 2.3.2 streaming job").
               setMaster("spark://10.1.1.190:6066").
                 set("spark.sql.warehouse.dir", "/apps/hive/warehouse").
                 set("spark.submit.deployMode" , "cluster").
@@ -77,7 +77,7 @@ private static StructType schemaStructured = null;
         schemaStructured = Utils.avroToSparkSchema(schema);
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
         SparkSession spark = SparkSession.builder().
-                appName("v202111032342  spark 2.3.2 streaming job").
+                appName("v202111061725  spark 2.3.2 streaming job").
                 config("spark.sql.warehouse.dir", "/apps/hive/warehouse").
                 master("spark://10.1.1.190:6066").
                 config("spark.submit.deployMode","cluster").
