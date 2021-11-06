@@ -72,7 +72,7 @@ private static StructType schemaStructured = null;
                 set("spark.hadoop.fs.defaultFS", "hdfs://10.1.1.190:9000").
                 set("spark.hadoop.fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName()).
                 set("spark.hadoop.fs.hdfs.server", org.apache.hadoop.hdfs.server.namenode.NameNode.class.getName()).
-                set("spark.hadoop.conf", org.apache.hadoop.hdfs.HdfsConfiguration.class.getName()));
+                set("spark.hadoop.conf", org.apache.hadoop.hdfs.HdfsConfiguration.class.getName());
 
         schemaStructured = Utils.avroToSparkSchema(schema);
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
