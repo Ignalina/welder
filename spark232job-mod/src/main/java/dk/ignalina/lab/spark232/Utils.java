@@ -6,6 +6,7 @@ import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientExcept
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
@@ -62,6 +63,9 @@ public class Utils {
     static public void createHiveTable(Dataset<Row> df, String tableName,SparkSession spark) {
         spark.sql("use hiveorg_prod");
 
+
+        String tables[]=spark.sqlContext().tableNames();
+        Arrays.asList(tables).contains(tables);
         String tmpTableName="my_temp"+tableName;
 
         df.createOrReplaceTempView(tmpTableName);
