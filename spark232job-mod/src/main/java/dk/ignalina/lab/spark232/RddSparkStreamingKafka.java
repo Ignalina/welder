@@ -68,8 +68,8 @@ private static StructType schemaStructured = null;
                 set("spark.sql.catalogImplementation","hive").
                 set("hive.metastore.uris","thrift://10.1.1.190:9083").
                 set("spark.driver.supervise","true").
-                set("spark.hadoop.fs.default.name", "hdfs://10.1.1.190:9000").
-                set("spark.hadoop.fs.defaultFS", "hdfs://10.1.1.190:9000").
+                set("spark.hadoop.fs.default.name", "hdfs://10.1.1.190:8020").
+                set("spark.hadoop.fs.defaultFS", "hdfs://10.1.1.190:8020").
                 set("spark.hadoop.fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName()).
                 set("spark.hadoop.fs.hdfs.server", org.apache.hadoop.hdfs.server.namenode.NameNode.class.getName()).
                 set("spark.hadoop.conf", org.apache.hadoop.hdfs.HdfsConfiguration.class.getName());
