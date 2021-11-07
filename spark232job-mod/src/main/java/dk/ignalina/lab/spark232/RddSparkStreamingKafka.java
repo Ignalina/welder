@@ -144,6 +144,7 @@ private static StructType schemaStructured = null;
                     Dataset<Row> df2 =  spark.createDataFrame(newRDD,schemaStructured);
                     df2.printSchema();
                     df2.show(10);
+                    df2.write().insertInto(config.topic);
 
 
                     /**
