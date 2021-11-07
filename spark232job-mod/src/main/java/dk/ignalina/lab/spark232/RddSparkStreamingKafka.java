@@ -134,13 +134,22 @@ private static StructType schemaStructured = null;
 
         stream.map(message -> message.value()).
                 foreachRDD( javaRDD -> {
-                    System.out.println(" count="+javaRDD.count()+" antal partitioner="+javaRDD.getNumPartitions()+"");
+//                    System.out.println(" count="+javaRDD.count()+" antal partitioner="+javaRDD.getNumPartitions()+"");
 
-                    JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
-                    Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
-                    df2.printSchema();
-                    df.show(10);
-//                    df2.write().insertInto(config.topic);
+                                JavaRDD<Row> newRDD= javaRDD.map(x->{
+                                    return avroToRowConverter(x,schemaStructured);
+                                });
+
+                    System.out.println(" ROW count="+newRDD.count()+" antal ROW partitioner="+newRDD.getNumPartitions()+"");
+
+
+                    /**
+        JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
+        Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
+        df2.printSchema();
+        df.show(10);
+        df2.write().insertInto(config.topic);
+                     */
 
                 });
 
