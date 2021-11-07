@@ -139,6 +139,7 @@ private static StructType schemaStructured = null;
                     JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
                     Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
                     df2.printSchema();
+                    df.show(10);
 //                    df2.write().insertInto(config.topic);
 
                 });
