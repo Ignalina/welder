@@ -98,12 +98,15 @@ private static StructType schemaStructured = null;
 
         kafkaParams.put("bootstrap.servers", config.bootstrap_servers);
         kafkaParams.put("key.deserializer", StringDeserializer.class);
-        kafkaParams.put("value.deserializer", ByteArrayDeserializer.class);
+//        kafkaParams.put("value.deserializer", ByteArrayDeserializer.class);
+        kafkaParams.put("value.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
+
         kafkaParams.put("group.id", "groupid");
         kafkaParams.put("auto.offset.reset", "latest");
         kafkaParams.put("enable.auto.commit", false);
 
         Collection<String> topics = Arrays.asList(config.topic);
+        /**
 
         JavaInputDStream<ConsumerRecord<String, byte[]>> stream =
                 KafkaUtils.createDirectStream(
@@ -112,7 +115,6 @@ private static StructType schemaStructured = null;
                         ConsumerStrategies.<String, byte[]>Subscribe(topics, kafkaParams)
                 );
 
- /**
         stream.map(message -> recordInjection.invert(message.value()).get()).
                 foreachRDD( javaRDD -> {
                     JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
@@ -122,7 +124,15 @@ private static StructType schemaStructured = null;
         });
 */
 
-        stream.map(message -> recordInjection.invert(message.value()).get()).
+
+        JavaInputDStream<ConsumerRecord<String, GenericRecord>> stream =
+                KafkaUtils.createDirectStream(
+                        ssc,
+                        LocationStrategies.PreferConsistent(),
+                        ConsumerStrategies.<String, GenericRecord>Subscribe(topics, kafkaParams)
+                );
+
+        stream.map(message -> message.value()).
                 foreachRDD( javaRDD -> {
                     System.out.println(" count="+javaRDD.count()+" antal partitioner="+javaRDD.getNumPartitions()+"");
 
