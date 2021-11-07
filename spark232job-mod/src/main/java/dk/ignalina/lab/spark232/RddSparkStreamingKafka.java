@@ -124,6 +124,8 @@ private static StructType schemaStructured = null;
 
         stream.map(message -> recordInjection.invert(message.value()).get()).
                 foreachRDD( javaRDD -> {
+                    System.out.println(" count="+javaRDD.count()+" antal partitioner="+javaRDD.getNumPartitions()+"");
+
 //                    JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
 //                    Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
 //                    df2.write().insertInto(config.topic);
