@@ -1,5 +1,6 @@
 package dk.ignalina.lab.spark232;
 
+import jdk.nashorn.internal.runtime.linker.JavaAdapterFactory;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
@@ -20,6 +21,7 @@ import org.apache.spark.TaskContext;
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
+import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.*;
@@ -110,16 +112,30 @@ private static StructType schemaStructured = null;
                         ConsumerStrategies.<String, byte[]>Subscribe(topics, kafkaParams)
                 );
 
-
+ /**
         stream.map(message -> recordInjection.invert(message.value()).get()).
                 foreachRDD( javaRDD -> {
                     JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
                     Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
-//                    df2.write().saveAsTable(config.topic);
                     df2.write().insertInto(config.topic);
 
         });
+*/
 
+        stream.map(message -> recordInjection.invert(message.value()).get()).
+                foreachRDD( javaRDD -> {
+//                    JavaRDD<Row> rddOfRows =javaRDD.map(fields -> RowFactory.create(fields));
+//                    Dataset<Row> df2 =  spark.createDataFrame(rddOfRows,schemaStructured);
+//                    df2.write().insertInto(config.topic);
+
+                });
+
+
+/**
+        JavaDStream<byte[]> a=stream.map(message -> message.value() );
+        a.
+        a .flatMap(iiii-> {
+        });
 
 /**
  * Update offsets if sucess storing all external

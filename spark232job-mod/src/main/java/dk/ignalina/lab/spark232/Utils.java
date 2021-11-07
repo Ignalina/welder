@@ -3,6 +3,7 @@ package dk.ignalina.lab.spark232;
 import io.confluent.kafka.schemaregistry.client.rest.RestService;
 import io.confluent.kafka.schemaregistry.client.rest.entities.Schema;
 import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
+import com.databricks.spark.avro.SchemaConverters;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,6 +84,6 @@ public class Utils {
     }
 
     static public StructType avroToSparkSchema(org.apache.avro.Schema avroSchema) {
-        return (StructType) com.databricks.spark.avro.SchemaConverters.toSqlType(avroSchema).dataType();
+        return (StructType) SchemaConverters.toSqlType(avroSchema).dataType();
     }
 }
