@@ -141,6 +141,9 @@ private static StructType schemaStructured = null;
                                 });
 
                     System.out.println(" ROW count="+newRDD.count()+" antal ROW partitioner="+newRDD.getNumPartitions()+"");
+                    Dataset<Row> df2 =  spark.createDataFrame(newRDD,schemaStructured);
+                    df2.printSchema();
+                    df.show(10);
 
 
                     /**
