@@ -100,7 +100,7 @@ private static StructType schemaStructured = null;
         kafkaParams.put("key.deserializer", StringDeserializer.class);
 //        kafkaParams.put("value.deserializer", ByteArrayDeserializer.class);
         kafkaParams.put("value.deserializer", io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
-
+        kafkaParams.put("schema.registry.url","http://10.1.1.90:8081");
         kafkaParams.put("group.id", "groupid");
         kafkaParams.put("auto.offset.reset", "latest");
         kafkaParams.put("enable.auto.commit", false);
