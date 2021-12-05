@@ -3,9 +3,17 @@ pipeline {
   stages {
     stage('RUN JFROG CLI') {
       steps {
+        sh '''rm -rf ~/.m2/repository/dk/ignalina/lab/
+
+
+'''
+      }
+    }
+
+    stage('') {
+      steps {
         sh '''export M2_HOME=/usr/share/java/maven-3
 
-rm -rf ~/.m2/repository/dk/ignalina/lab/
 
 
 cd spark232job-mod
@@ -14,7 +22,7 @@ ls -l target
 cd ..
 
 
-ssh hadoop@10.1.1.190 \'/home/hadoop/welder_load.sh\'
+#ssh spark@10.1.1.193 \'/home/hadoop/welder_load.sh\'
 
 '''
       }
