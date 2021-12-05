@@ -39,11 +39,12 @@ cd ..
 cd spark320job-mod
 mvn clean install -U
 ls -l target
-cd ..
 
 
 scp target/welder-delta-job-1.0-SNAPSHOT.jar spark@10.1.1.193:.
 ssh spark@10.1.1.193 \'/home/spark/welder_load_spark320.sh\'
+
+cd ..
 
 '''
           }
