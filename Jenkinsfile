@@ -12,7 +12,7 @@ pipeline {
 
     stage('Spark232 insert only') {
       parallel {
-        stage('error') {
+        stage('Spark232') {
           steps {
             sh '''export M2_HOME=/usr/share/java/maven-3
 
