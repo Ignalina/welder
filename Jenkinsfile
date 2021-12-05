@@ -42,7 +42,8 @@ ls -l target
 cd ..
 
 
-#ssh spark@10.1.1.193 \'/home/hadoop/welder_load.sh\'
+scp spark@10.1.1.193:.
+ssh spark@10.1.1.193 \'/home/spark/welder_load_spark320.sh\'
 
 '''
           }
