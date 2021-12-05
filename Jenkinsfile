@@ -10,9 +10,11 @@ pipeline {
       }
     }
 
-    stage('') {
-      steps {
-        sh '''export M2_HOME=/usr/share/java/maven-3
+    stage('Spark232 insert only') {
+      parallel {
+        stage('error') {
+          steps {
+            sh '''export M2_HOME=/usr/share/java/maven-3
 
 
 
@@ -25,6 +27,27 @@ cd ..
 #ssh spark@10.1.1.193 \'/home/hadoop/welder_load.sh\'
 
 '''
+          }
+        }
+
+        stage('Spark3.2.0') {
+          steps {
+            sh '''export M2_HOME=/usr/share/java/maven-3
+
+
+
+cd spark320job-mod
+mvn clean install -U
+ls -l target
+cd ..
+
+
+#ssh spark@10.1.1.193 \'/home/hadoop/welder_load.sh\'
+
+'''
+          }
+        }
+
       }
     }
 
