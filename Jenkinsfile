@@ -33,6 +33,7 @@ cd ..
         stage('Spark3.2.0') {
           steps {
             sh '''export M2_HOME=/usr/share/java/maven-3
+export JAVA_HOME=/usr/lib/jvm/default-jvm/
 
 
 
