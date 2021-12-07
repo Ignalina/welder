@@ -82,9 +82,15 @@
       <artifactId>spark-sql_${scala.version}</artifactId>
       <version>${spark.version}</version>
     </dependency>
+      <dependency>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-schema-registry-client</artifactId>
+          <version>3.0.0</version>
+          <scope>compile</scope>
+      </dependency>
 
 
-    <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+      <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
 
   </dependencies>
 
