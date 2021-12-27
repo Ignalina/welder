@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dk.ignalina.lab.spark232</groupId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
 
   <artifactId>welder-spark-job</artifactId>
   <packaging>jar</packaging>
@@ -152,35 +152,7 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.4</version>
-        <configuration>
-          <filters>
-            <filter>
-              <artifact>*:*</artifact>
-              <excludes>
-                <exclude>META-INF/*.SF</exclude>
-                <exclude>META-INF/*.DSA</exclude>
-                <exclude>META-INF/*.RSA</exclude>
-              </excludes>
-            </filter>
-          </filters>
-        </configuration>
-        <executions>
-          <execution>
-            <id>job-driver-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <shadedArtifactAttached>false</shadedArtifactAttached>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+
  <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-javadoc-plugin</artifactId>
@@ -224,17 +196,6 @@
                     </execution>
                 </executions>
             </plugin>
-    <plugin>
-      <groupId>org.sonatype.plugins</groupId>
-      <artifactId>nexus-staging-maven-plugin</artifactId>
-      <version>1.6.8</version>
-      <extensions>true</extensions>
-      <configuration>
-        <serverId>ossrh</serverId>
-        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-        <autoReleaseAfterClose>true</autoReleaseAfterClose>
-      </configuration>
-    </plugin>    
 
           <plugin>
   <groupId>org.sonatype.plugins</groupId>
