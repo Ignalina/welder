@@ -47,9 +47,9 @@
   <scm>  
    <connection>scm:git:https://github.com/Ignalina/welder.git</connection>
     <developerConnection>scm:git:https://github.com/Ignalina/welder.git</developerConnection>
+    <tag>main</tag>
+    <url>https://github.com/Ignalina/welder</url>
   </scm>
-<tag>HEAD</tag>
-    <url>http://127.0.0.1/websvn/my-project</url>
   
   
   
