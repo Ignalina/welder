@@ -211,13 +211,14 @@
 </plugin>
     </plugins>
   </build>
-
+ <licenses>
   <license>
     <name>MIT-0</name>
     <url>https://spdx.org/licenses/MIT-0.html</url>
     <distribution>repo</distribution>
     <comments>Do what you want license</comments>
   </license>
+ </licenses>
   
   <developers>
     <developer>
