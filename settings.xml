@@ -46,13 +46,12 @@
                 <repository>
                     <id>my-repo4</id>
                     <name>your custom repo</name>
-                    <url>https://mvnrepository.com/artifact</url>
+                    <url>https://mvnrepository.com/artifact/</url>
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
-               </repository>
-                      
-                  <repository>
+               </repository>                      
+               <repository>
                     <id>my-repo5</id>
                     <name>your custom repo</name>
                     <url>https://jcenter.bintray.com</url>
