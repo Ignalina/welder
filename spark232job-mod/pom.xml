@@ -21,14 +21,14 @@
     <comments>Do what you want license</comments>
   </license>
  </licenses>
-<organization>Ignalina Analyse &amp; Informatik ApS</organization>
+<organization>Ignalina Analyse  Informatik ApS</organization>
     <developers>
     <developer>
       <id>rickard</id>
       <name>Rickard Ernst Björn Lundin</name>
       <email>rickard@ignalina.dk</email>
       <url>https://www.ignalina.dk/rickard</url>
-      <organization>Ignalina Analyse &amp; Informatik ApS</organization>
+      <organization>Ignalina Analyse Informatik ApS</organization>
       <organizationUrl>https://www.ignalina.dk</organizationUrl>
       <roles>
         <role>architect</role>
