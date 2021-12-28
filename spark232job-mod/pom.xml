@@ -10,6 +10,7 @@
   <artifactId>welder-spark-job</artifactId>
   <packaging>jar</packaging>
   <name>Welder spark 2.3.2 kafka </name>
+  <description>Streaming spark job , Kafka/avro to Hive</description>
 
   <url>https://github.com/Ignalina/welder</url>
   
@@ -211,4 +212,35 @@
     </plugins>
   </build>
 
+  <license>
+    <name>MIT-0</name>
+    <url>https://spdx.org/licenses/MIT-0.html</url>
+    <distribution>repo</distribution>
+    <comments>Do what you want license</comments>
+  </license>
+  
+  <developers>
+    <developer>
+      <id>rickard</id>
+      <name>Rickard Ernst Björn Lundin</name>
+      <email>rickard@ignalina.dk</email>
+      <url>https://www.ignalina.dk/rickard</url>
+      <organization>Ignalina Analyse & Informatik ApS</organization>
+      <organizationUrl>https://www.ignalina.dk</organizationUrl>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>Europe/Copenhagen</timezone>
+      <properties>
+        <picUrl>https://www.ignalina.dk/rickard/pic</picUrl>
+      </properties>
+    </developer>
+  </developers>
+  
+</project>
+  
+  <scm>git@github.com:Ignalina/welder.git</scm>
+  
+  
 </project>
