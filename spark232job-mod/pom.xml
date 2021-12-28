@@ -13,7 +13,34 @@
   <description>Streaming spark job , Kafka/avro to Hive</description>
 
   <url>https://github.com/Ignalina/welder</url>
-  
+ <licenses>
+  <license>
+    <name>MIT-0</name>
+    <url>https://spdx.org/licenses/MIT-0.html</url>
+    <distribution>repo</distribution>
+    <comments>Do what you want license</comments>
+  </license>
+ </licenses>
+<organization>Ignalina Analyse &amp; Informatik ApS</organization>
+    <developers>
+    <developer>
+      <id>rickard</id>
+      <name>Rickard Ernst Björn Lundin</name>
+      <email>rickard@ignalina.dk</email>
+      <url>https://www.ignalina.dk/rickard</url>
+      <organization>Ignalina Analyse &amp; Informatik ApS</organization>
+      <organizationUrl>https://www.ignalina.dk</organizationUrl>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>Europe/Copenhagen</timezone>
+      <properties>
+        <picUrl>https://www.ignalina.dk/rickard/pic</picUrl>
+      </properties>
+    </developer>
+  </developers>
+  <scm>git@github.com:Ignalina/welder.git</scm>
   <distributionManagement>
   <snapshotRepository>
     <id>ossrh</id>
@@ -211,37 +238,11 @@
 </plugin>
     </plugins>
   </build>
- <licenses>
-  <license>
-    <name>MIT-0</name>
-    <url>https://spdx.org/licenses/MIT-0.html</url>
-    <distribution>repo</distribution>
-    <comments>Do what you want license</comments>
-  </license>
- </licenses>
   
-  <developers>
-    <developer>
-      <id>rickard</id>
-      <name>Rickard Ernst Björn Lundin</name>
-      <email>rickard@ignalina.dk</email>
-      <url>https://www.ignalina.dk/rickard</url>
-      <organization>Ignalina Analyse &amp; Informatik ApS</organization>
-      <organizationUrl>https://www.ignalina.dk</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>Europe/Copenhagen</timezone>
-      <properties>
-        <picUrl>https://www.ignalina.dk/rickard/pic</picUrl>
-      </properties>
-    </developer>
-  </developers>
   
 </project>
   
-  <scm>git@github.com:Ignalina/welder.git</scm>
+
   
   
 </project>
