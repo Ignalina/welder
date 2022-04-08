@@ -15,6 +15,8 @@ pipeline {
         stage('Spark232') {
           steps {
             sh '''export M2_HOME=/usr/share/java/maven-3
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
+#export JAVA_HOME=/usr/lib/jvm/default-jvm/
 
 
 
@@ -24,7 +26,10 @@ ls -l target
 cd ..
 
 
-#ssh spark@10.1.1.193 \'/home/hadoop/welder_load.sh\'
+#ssh spark@10.1.1.190 \'/home/hadoop/welder_load.sh\'
+
+#scp target/welder-delta-job-1.0-SNAPSHOT.jar spark@10.1.1.193:.
+#ssh spark@10.1.1.190 \'/home/spark/welder_load_spark232.sh\'
 
 '''
           }
@@ -33,7 +38,8 @@ cd ..
         stage('Spark3.2.0') {
           steps {
             sh '''export M2_HOME=/usr/share/java/maven-3
-export JAVA_HOME=/usr/lib/jvm/default-jvm/
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
+#export JAVA_HOME=/usr/lib/jvm/default-jvm/
 
 
 
