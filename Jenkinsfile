@@ -29,8 +29,8 @@ cd ..
 
 #ssh spark@10.1.1.190 \'/home/hadoop/welder_load.sh\'
 
-#scp target/welder-delta-job-1.0-SNAPSHOT.jar spark@10.1.1.193:.
-#ssh spark@10.1.1.190 \'/home/spark/welder_load_spark232.sh\'
+scp target/welder-spark-job-0.0.1.jar spark@10.1.1.190:.
+ssh spark@10.1.1.190 \'/home/spark/welder_load_spark232.sh\'
 
 '''
           }
