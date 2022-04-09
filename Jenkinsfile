@@ -23,8 +23,8 @@ gpg --list-keys
 
 cd spark232job-mod
 mvn clean install -U
-ls -l target
-cd ..
+#ls -l target
+
 
 
 #ssh spark@10.1.1.190 \'/home/hadoop/welder_load.sh\'
