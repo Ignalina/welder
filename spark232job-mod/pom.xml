@@ -260,14 +260,17 @@
         <goals>
           <goal>sign</goal>
         </goals>
-        <configuration>
-          <gpgArguments>
-            <arg>--pinentry-mode</arg>
-            <arg>loopback</arg>
-            <arg>--no-tty</arg>
-            <arg>--batch</arg>            
-          </gpgArguments>
-        </configuration>
+      
+   <configuration>
+    <useAgent>true</useAgent>
+    <gpgArguments>
+      <arg>--batch</arg>
+      <arg>--pinentry-mode</arg>
+      <arg>loopback</arg>
+    </gpgArguments>
+  </configuration>
+      
+
     </execution>
   </executions>
 </plugin>
