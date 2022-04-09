@@ -19,6 +19,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
 #export JAVA_HOME=/usr/lib/jvm/default-jvm/
 
 
+gpg --list-keys
 
 cd spark232job-mod
 mvn clean install -U
