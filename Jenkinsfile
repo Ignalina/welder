@@ -30,7 +30,7 @@ mvn clean install -U
 #ssh spark@10.1.1.190 \'/home/hadoop/welder_load.sh\'
 #scp target/welder-spark-job-0.0.1.jar spark@10.1.1.190:.
 
-mvn deploy:deploy-file -Durl=https://nexus.x14.se -Dfile=target/welder-spark-job-0.0.1.jar -DgroupId=dk.ignalina.lab.spark232 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.1 -DrepositoryId=x14-repo
+mvn deploy:deploy-file -Durl=https://nexus.x14.se -Dfile=target/welder-spark-job-0.0.1.jar -DgroupId=dk.ignalina.lab.spark232 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.1-SNAPSHOT -DrepositoryId=x14-repo
 
 ssh spark@10.1.1.190 \'/home/spark/welder_load_spark232.sh\'
 
