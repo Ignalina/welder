@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dk.ignalina.lab.spark232</groupId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 
   <artifactId>welder-spark-job</artifactId>
   <packaging>jar</packaging>
@@ -173,6 +173,16 @@
    
       
   
+        <profiles>
+<profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+<property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+
 
 
   <build>
@@ -248,11 +258,40 @@
      <autoReleaseAfterClose>false</autoReleaseAfterClose>
   </configuration>
 </plugin>
+
+            
+      
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-gpg-plugin</artifactId>
+  <version>1.6</version>
+  <executions>
+    <execution>
+      <id>sign-artifacts</id>
+        <phase>verify</phase>
+        <goals>
+          <goal>sign</goal>
+        </goals>
+      
+   <configuration>
+    <useAgent>true</useAgent>
+    <gpgArguments>
+      <arg>--batch</arg>
+      <arg>--pinentry-mode</arg>
+      <arg>loopback</arg>
+    </gpgArguments>
+  </configuration>
       
 
+    </execution>
+  </executions>
+</plugin>
+      
       
     </plugins>
   </build>
+  </profile>
+</profiles>
   
   
  
