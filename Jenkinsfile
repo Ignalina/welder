@@ -33,7 +33,7 @@ mvn clean install -U
 #mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-snapshots -Dfile=target/welder-spark-job-0.0.1-SNAPSHOT.jar -DgroupId=dk.ignalina.lab.spark232 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.1-SNAPSHOT -DrepositoryId=x14-repo
 
 
-mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-releases -Dfile=target/welder-spark-job-0.0.1.jar -DgroupId=dk.ignalina.lab.spark232 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.2 -DrepositoryId=x14-repo
+mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-releases -Dfile=target/welder-spark-job-0.0.2.jar -DgroupId=dk.ignalina.lab.spark232 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.2 -DrepositoryId=x14-repo
 
 
 ssh spark@10.1.1.190 \'/home/spark/welder_load_spark232.sh\'
