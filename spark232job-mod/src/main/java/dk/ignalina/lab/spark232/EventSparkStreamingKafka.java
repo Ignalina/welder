@@ -50,10 +50,12 @@ public class EventSparkStreamingKafka {
 
 
     public static void main(String... args) {
+        System.out.println("About to start streaming evenvt job");
+
         config = Utils.parToConfig(args);
 
 
-        SparkConf conf = new SparkConf().setAppName("v20220310 spark 2.3.2 streaming event job ");
+        SparkConf conf = new SparkConf().setAppName("v20220425 spark 2.3.2 streaming event job ");
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
         SparkSession spark = SparkSession.builder().getOrCreate();
