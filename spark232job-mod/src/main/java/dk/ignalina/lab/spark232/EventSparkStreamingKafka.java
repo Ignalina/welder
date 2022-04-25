@@ -87,13 +87,15 @@ public class EventSparkStreamingKafka {
       }
       );
 
-
+        System.out.println("About to start ssc");
         ssc.start();
         try {
+            System.out.println("About to await term");
             ssc.awaitTermination();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+            System.out.println("WE ARE DONE HA HA HA");
 
 
     }
