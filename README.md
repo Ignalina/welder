@@ -1,4 +1,4 @@
-# Welder
+# Welder 2022
 Trying out different streaming jobs to read avro from kafka and output to targets like :
 *  Append only: hive/parquet  
 *  full sync: Iceberg/parquet.
