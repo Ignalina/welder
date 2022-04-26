@@ -83,11 +83,18 @@ public class EventSparkStreamingKafka {
 
 
 //        stream.mapToPair(record -> new Tuple2<>(record.key(), record.value()));
-      stream.mapToPair (message -> {
-                  System.out.println("message key"+message.key()+ "message value" + message.value());
-          return null;
-      }
-      );
+//      stream.mapToPair (message -> {
+//                  System.out.println("message key"+message.key()+ "message value" + message.value());
+//          return null;
+//      }
+//      );
+
+        stream.foreachRDD(rdd -> {
+            rdd.foreach(record -> {
+                System.out.println(record);
+            });
+        });
+
 
         System.out.println("About to start ssc");
         ssc.start();
