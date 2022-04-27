@@ -97,7 +97,7 @@ public class EventSparkStreamingKafka {
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
         List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
-        for(ConsumerRecord cr: rows ) {
+        for(ConsumerRecord<String,GenericRecord> cr: rows ) {
             System.out.println ("cr=="+cr);
         }
 
