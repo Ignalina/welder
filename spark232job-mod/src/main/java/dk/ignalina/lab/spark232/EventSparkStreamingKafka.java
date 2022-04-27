@@ -24,6 +24,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -105,21 +106,20 @@ public class EventSparkStreamingKafka {
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
 
-        rdd1.foreach(EventSparkStreamingKafka::callForEachRow);
+//        rdd1.foreach(EventSparkStreamingKafka::callForEachRow);
 
-//            rdd1.foreach(record -> {
-//                System.out.println("record");
-//                ConsumerRecord<String, GenericRecord> record1=record;
-//                System.out.println("record.value.tostring"+record1.value().toString());
-//            });
-    }
-    private static void callForEachRow(ConsumerRecord<String, GenericRecord> record) {
- //       JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
-        System.out.println("record=" + record);
+         rdd1.foreach (new VoidFunction<ConsumerRecord<String, GenericRecord>>() {
+            @Override
+            public void call(ConsumerRecord<String, GenericRecord> stringGenericRecordConsumerRecord) throws Exception {
+                System.out.println("stringGenericRecorConsumerRecord.value=" + stringGenericRecordConsumerRecord.value());
 
-          ConsumerRecord<String, GenericRecord> record1=record;
-//                System.out.println("record.value.tostring"+record1.value().toString());
+            }
+        });
+
     }
+
+
+
 
 
 }
