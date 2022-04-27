@@ -86,11 +86,13 @@ public class EventSparkStreamingKafka {
 
         stream.foreachRDD(rdd -> {
             JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
-            rdd1.foreach(record -> {
-                System.out.println("record");
+            System.out.println("rdd"+rdd1.toDebugString());
+
+//            rdd1.foreach(record -> {
+//                System.out.println("record");
 //                ConsumerRecord<String, GenericRecord> record1=record;
 //                System.out.println("record.value.tostring"+record1.value().toString());
-            });
+//            });
         });
 
 
