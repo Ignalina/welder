@@ -90,9 +90,9 @@ public class EventSparkStreamingKafka {
 //      );
 
         stream.foreachRDD(rdd -> {
-            rdd.foreach(record -> {
-                System.out.println("record="+record);
-            });
+//            rdd.foreach(record -> {
+//                System.out.println("record="+record);
+//            });
         });
 
 
