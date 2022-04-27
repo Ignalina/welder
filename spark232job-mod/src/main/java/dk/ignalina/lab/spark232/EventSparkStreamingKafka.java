@@ -24,6 +24,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -84,16 +85,7 @@ public class EventSparkStreamingKafka {
 
         JavaRDD<String> rddString;
 
-        stream.foreachRDD(rdd -> {
-            JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
-            System.out.println("rdd="+rdd1.toDebugString());
-
-//            rdd1.foreach(record -> {
-//                System.out.println("record");
-//                ConsumerRecord<String, GenericRecord> record1=record;
-//                System.out.println("record.value.tostring"+record1.value().toString());
-//            });
-        });
+        stream.foreachRDD(EventSparkStreamingKafka::call);
 
 
         System.out.println("About to start ssc");
@@ -109,4 +101,16 @@ public class EventSparkStreamingKafka {
 
     }
 
+    private static void call(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
+        JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
+        System.out.println("rdd=" + rdd1.toDebugString());
+
+
+
+            rdd1.foreach(record -> {
+//                System.out.println("record");
+//                ConsumerRecord<String, GenericRecord> record1=record;
+//                System.out.println("record.value.tostring"+record1.value().toString());
+            });
+    }
 }
