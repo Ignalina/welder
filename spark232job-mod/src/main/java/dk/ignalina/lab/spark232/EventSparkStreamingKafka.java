@@ -50,6 +50,10 @@ public class EventSparkStreamingKafka {
 
         SparkConf conf = new SparkConf().setAppName("v20220425 spark 2.3.2 streaming event job ");
 
+
+        conf.set("spark.serializer","org.apache.spark.serializer.KryoSerialize");
+        conf.registerKryoClasses((Class<ConsumerRecord>[] )Arrays.asList(ConsumerRecord.class).toArray());
+
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
         SparkSession spark = SparkSession.builder().getOrCreate();
 
