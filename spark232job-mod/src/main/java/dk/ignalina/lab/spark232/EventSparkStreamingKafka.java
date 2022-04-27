@@ -85,7 +85,7 @@ public class EventSparkStreamingKafka {
 
         JavaRDD<String> rddString;
 
-        stream.foreachRDD(EventSparkStreamingKafka::call);
+        stream.foreachRDD(EventSparkStreamingKafka::callForEachRdd);
 
 
         System.out.println("About to start ssc");
@@ -101,11 +101,11 @@ public class EventSparkStreamingKafka {
 
     }
 
-    private static void call(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
+    private static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
 
-
+        rdd1.foreach(EventSparkStreamingKafka::callForEachRow);
 
 //            rdd1.foreach(record -> {
 //                System.out.println("record");
@@ -113,4 +113,13 @@ public class EventSparkStreamingKafka {
 //                System.out.println("record.value.tostring"+record1.value().toString());
 //            });
     }
+    private static void callForEachRow(ConsumerRecord<String, GenericRecord> record) {
+ //       JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
+        System.out.println("record=" + record);
+
+          ConsumerRecord<String, GenericRecord> record1=record;
+//                System.out.println("record.value.tostring"+record1.value().toString());
+    }
+
+
 }
