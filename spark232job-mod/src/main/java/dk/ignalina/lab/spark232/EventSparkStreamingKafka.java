@@ -106,15 +106,14 @@ public class EventSparkStreamingKafka {
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
 
-//        rdd1.foreach(EventSparkStreamingKafka::callForEachRow);
 
-//         rdd1.foreach (new VoidFunction<ConsumerRecord<String, GenericRecord>>() {
-//            @Override
-//            public void call(ConsumerRecord<String, GenericRecord> stringGenericRecordConsumerRecord) throws Exception {
-//                System.out.println("stringGenericRecorConsumerRecord.value=" + stringGenericRecordConsumerRecord.value());
+         rdd1.foreach (new VoidFunction<ConsumerRecord<String, GenericRecord>>() {
+            @Override
+            public void call(ConsumerRecord<String, GenericRecord> stringGenericRecordConsumerRecord) throws Exception {
+               System.out.println("stringGenericRecorConsumerRecord.value=" + stringGenericRecordConsumerRecord.value());
 
-//            }
-//        });
+            }
+        });
 
     }
 
