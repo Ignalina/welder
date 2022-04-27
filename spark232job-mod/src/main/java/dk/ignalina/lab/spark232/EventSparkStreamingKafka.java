@@ -24,12 +24,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.VoidFunction;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -37,11 +32,7 @@ import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class EventSparkStreamingKafka {
 
@@ -105,8 +96,12 @@ public class EventSparkStreamingKafka {
     private static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
+        List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
+        for(ConsumerRecord cr: rows ) {
+            System.out.println (cr.value());
+        }
 
-
+        /** Below give runtime Chrash.
          rdd1.foreach (new VoidFunction<ConsumerRecord<String, GenericRecord>>() {
             @Override
             public void call(ConsumerRecord<String, GenericRecord> stringGenericRecordConsumerRecord) throws Exception {
@@ -114,7 +109,7 @@ public class EventSparkStreamingKafka {
 
             }
         });
-
+*/
     }
 
 
