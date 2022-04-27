@@ -82,19 +82,13 @@ public class EventSparkStreamingKafka {
 
 
 
-//        stream.mapToPair(record -> new Tuple2<>(record.key(), record.value()));
-//      stream.mapToPair (message -> {
-//                  System.out.println("message key"+message.key()+ "message value" + message.value());
-//          return null;
-//      }
-//      );
         JavaRDD<String> rddString;
-
 
         stream.foreachRDD(rdd -> {
             JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
             rdd1.foreach(record -> {
-                System.out.println("record="+record);
+                ConsumerRecord<String, GenericRecord> record1=record;
+                System.out.println("record.value.tostring"+record1.value().toString());
             });
         });
 
