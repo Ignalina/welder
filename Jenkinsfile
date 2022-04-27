@@ -32,7 +32,7 @@ mvn clean install -U
 mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-releases -Dfile=target/welder-spark-job-0.0.2.jar -DgroupId=dk.ignalina.lab.spark232 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.2 -DrepositoryId=x14-repo
 
 
-ssh spark@10.1.1.190 \'/home/spark/eventdriven_load_spark232.sh\'
+ssh spark@10.1.1.190 \'cd /home/spark ; ./eventdriven_load_spark232.sh\'
 
 '''
           }
