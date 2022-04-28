@@ -24,6 +24,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -82,7 +83,6 @@ public class EventSparkStreamingKafka {
 
         stream.foreachRDD(EventSparkStreamingKafka::callForEachRdd);
 
-
         System.out.println("About to start ssc");
         ssc.start();
         try {
@@ -99,12 +99,11 @@ public class EventSparkStreamingKafka {
     private static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
-        List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
-        for(ConsumerRecord<String,GenericRecord> cr: rows ) {
-            System.out.println ("cr=="+cr.value());
-        }
+//        List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
+//        for(ConsumerRecord<String,GenericRecord> cr: rows ) {
+//            System.out.println ("cr=="+cr.value());
+//        }
 
-        /** Below give runtime Chrash.
          rdd1.foreach (new VoidFunction<ConsumerRecord<String, GenericRecord>>() {
             @Override
             public void call(ConsumerRecord<String, GenericRecord> stringGenericRecordConsumerRecord) throws Exception {
@@ -112,7 +111,6 @@ public class EventSparkStreamingKafka {
 
             }
         });
-*/
     }
 
 
