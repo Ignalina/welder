@@ -19,6 +19,7 @@
 
 package dk.ignalina.lab.spark232.base;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.avro.generic.GenericRecord;
@@ -46,9 +47,10 @@ public class EventSparkStreamingKafka {
         conf.registerKryoClasses((Class<ConsumerRecord>[]) Arrays.asList(ConsumerRecord.class).toArray());
         return conf;
     }
+
     public static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
 
-        if(null!=actionImpl) {
+        if (null == actionImpl) {
             return; //
         }
 
@@ -56,12 +58,22 @@ public class EventSparkStreamingKafka {
         System.out.println("rdd=" + rdd1.toDebugString());
         List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
 
-        JsonParser parser  = new JsonParser();
+        JsonParser parser = new JsonParser();
 
         for (ConsumerRecord<String, GenericRecord> cr : rows) {
             System.out.println("TODO Extract filename and use this to read the parquet file  !" + cr.value());
-            String message=cr.value().toString();
-            actionImpl.fire(parser.parse(message).getAsJsonObject());
+            String message = cr.value().toString();
+            JsonObject jo = null;
+            try {
+                jo = parser.parse(message).getAsJsonObject();
+            } catch (IllegalStateException ei) {
+                System.out.println("Invalid unparsable json:" + ei.toString());
+            }
+
+            if (jo != null) {
+                actionImpl.fire(jo);
+            }
+
         }
     }
 
