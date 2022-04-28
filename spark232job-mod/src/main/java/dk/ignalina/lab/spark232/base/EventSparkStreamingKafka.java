@@ -17,15 +17,15 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package dk.ignalina.lab.spark232;
+package dk.ignalina.lab.spark232.base;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.reflect.AvroDefault;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -38,51 +38,7 @@ import java.util.*;
 
 public class EventSparkStreamingKafka {
 
-
-    static Utils.Config config;
-
-
-    public static void main(String... args) {
-
-        config = new Utils.Config(args);
-
-        SparkConf conf = CreateSparkConf("v20220428 spark 2.3.2 streaming event job ");
-
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
-        SparkSession spark = SparkSession.builder().getOrCreate();
-
-        Map<String, Object> kafkaParams = new HashMap<>();
-
-        kafkaParams.put("bootstrap.servers", config.bootstrap_servers);
-        kafkaParams.put("key.deserializer", StringDeserializer.class);
-        kafkaParams.put("value.deserializer", StringDeserializer.class);
-        kafkaParams.put("group.id", config.groupId);
-        kafkaParams.put("auto.offset.reset", config.startingOffsets);
-        kafkaParams.put("enable.auto.commit", true);
-
-        Collection<String> topics = Arrays.asList(config.topic);
-
-        JavaInputDStream<ConsumerRecord<String, GenericRecord>> stream =
-                KafkaUtils.createDirectStream(
-                        ssc,
-                        LocationStrategies.PreferConsistent(),
-                        ConsumerStrategies.<String, GenericRecord>Subscribe(topics, kafkaParams)
-                );
-
-
-        JavaRDD<String> rddString;
-
-        stream.foreachRDD(EventSparkStreamingKafka::callForEachRdd);
-
-        ssc.start();
-        try {
-            ssc.awaitTermination();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-    }
+    public static Action actionImpl;
 
     public static SparkConf CreateSparkConf(String appName) {
         SparkConf conf = new SparkConf().setAppName(appName);
@@ -91,11 +47,21 @@ public class EventSparkStreamingKafka {
         return conf;
     }
     public static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
+
+        if(null!=actionImpl) {
+            return; //
+        }
+
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
         List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
+
+        JsonParser parser  = new JsonParser();
+
         for (ConsumerRecord<String, GenericRecord> cr : rows) {
             System.out.println("TODO Extract filename and use this to read the parquet file  !" + cr.value());
+            String message=cr.value().toString();
+            actionImpl.fire(parser.parse(message).getAsJsonObject());
         }
     }
 

@@ -17,7 +17,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package dk.ignalina.lab.spark232;
+package dk.ignalina.lab.spark232.base;
 
 import com.databricks.spark.avro.SchemaConverters;
 import io.confluent.kafka.schemaregistry.client.rest.RestService;
