@@ -39,8 +39,6 @@ import java.util.*;
 public class EventSparkStreamingKafka {
 
 
-
-
     static Utils.Config config;
 
 
@@ -52,8 +50,8 @@ public class EventSparkStreamingKafka {
 
         SparkConf conf = new SparkConf().setAppName("v20220425 spark 2.3.2 streaming event job ");
 
-        conf.set("spark.serializer","org.apache.spark.serializer.KryoSerialize");
-        conf.registerKryoClasses((Class<ConsumerRecord>[] )Arrays.asList(ConsumerRecord.class).toArray());
+        conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerialize");
+        conf.registerKryoClasses((Class<ConsumerRecord>[]) Arrays.asList(ConsumerRecord.class).toArray());
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
         SparkSession spark = SparkSession.builder().getOrCreate();
@@ -79,7 +77,6 @@ public class EventSparkStreamingKafka {
                 );
 
 
-
         JavaRDD<String> rddString;
 
         stream.foreachRDD(EventSparkStreamingKafka::callForEachRdd);
@@ -92,7 +89,7 @@ public class EventSparkStreamingKafka {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-            System.out.println("WE ARE DONE HA HA HA");
+        System.out.println("WE ARE DONE HA HA HA");
 
 
     }
@@ -100,20 +97,9 @@ public class EventSparkStreamingKafka {
     private static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
-//        List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
-//        for(ConsumerRecord<String,GenericRecord> cr: rows ) {
-//            System.out.println ("cr=="+cr.value());
-//        }
-
-         rdd1.foreach (f);
-    }
-public static VoidFunction<ConsumerRecord<String, GenericRecord>> f=  new VoidFunction<ConsumerRecord<String, GenericRecord>>() {
-        @Override
-        public void call(ConsumerRecord<String, GenericRecord> stringGenericRecordConsumerRecord) throws Exception {
-            System.out.println("stringGenericRecorConsumerRecord.value=" + stringGenericRecordConsumerRecord.value());
-
+        List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
+        for (ConsumerRecord<String, GenericRecord> cr : rows) {
+            System.out.println("TODO Extract filename and use this to read the parquet file  !" + cr.value());
         }
-    };
-
-
+    }
 }
