@@ -20,6 +20,7 @@
 package dk.ignalina.lab.spark232;
 
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.reflect.AvroDefault;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
@@ -104,17 +105,15 @@ public class EventSparkStreamingKafka {
 //            System.out.println ("cr=="+cr.value());
 //        }
 
-         rdd1.foreach (new VoidFunction<ConsumerRecord<String, GenericRecord>>() {
-            @Override
-            public void call(ConsumerRecord<String, GenericRecord> stringGenericRecordConsumerRecord) throws Exception {
-               System.out.println("stringGenericRecorConsumerRecord.value=" + stringGenericRecordConsumerRecord.value());
-
-            }
-        });
+         rdd1.foreach (f);
     }
+public static VoidFunction<ConsumerRecord<String, GenericRecord>> f=  new VoidFunction<ConsumerRecord<String, GenericRecord>>() {
+        @Override
+        public void call(ConsumerRecord<String, GenericRecord> stringGenericRecordConsumerRecord) throws Exception {
+            System.out.println("stringGenericRecorConsumerRecord.value=" + stringGenericRecordConsumerRecord.value());
 
-
-
+        }
+    };
 
 
 }
