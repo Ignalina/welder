@@ -50,7 +50,6 @@ public class EventSparkStreamingKafka {
 
         SparkConf conf = new SparkConf().setAppName("v20220425 spark 2.3.2 streaming event job ");
 
-
         conf.set("spark.serializer","org.apache.spark.serializer.KryoSerialize");
         conf.registerKryoClasses((Class<ConsumerRecord>[] )Arrays.asList(ConsumerRecord.class).toArray());
 
@@ -102,7 +101,7 @@ public class EventSparkStreamingKafka {
         System.out.println("rdd=" + rdd1.toDebugString());
         List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
         for(ConsumerRecord<String,GenericRecord> cr: rows ) {
-            System.out.println ("cr=="+cr);
+            System.out.println ("cr=="+cr.value());
         }
 
         /** Below give runtime Chrash.
