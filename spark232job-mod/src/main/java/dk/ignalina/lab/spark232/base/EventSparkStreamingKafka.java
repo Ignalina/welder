@@ -62,7 +62,7 @@ public class EventSparkStreamingKafka {
 
         for (ConsumerRecord<String, GenericRecord> cr : rows) {
             System.out.println("TODO Extract filename and use this to read the parquet file  !" + cr.value());
-            String message = cr.value().toString();
+            String message = ""+cr.value();
             JsonObject jo = null;
             try {
                 jo = parser.parse(message).getAsJsonObject();
