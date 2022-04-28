@@ -24,6 +24,8 @@ import io.confluent.kafka.schemaregistry.client.rest.RestService;
 import io.confluent.kafka.schemaregistry.client.rest.entities.Schema;
 import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -33,6 +35,7 @@ import org.apache.spark.sql.types.StructType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class Utils {
@@ -41,15 +44,30 @@ public class Utils {
         public String topic = "topic";
         public String format;
         public String bootstrap_servers = "10.1.1.90:9092";
-
         public String schemaRegistryURL = "10.1.1.90:8081";
         public String subjectValueName;
         public String startingOffsets;
-
         public String checkpointDir;
         public String mode = "PERMISSIVE";
         public String failOnDataLoss = "false";
         public String master = "local[2]";
+        public int msIntervall = 2000;
+        public Object groupId="groupid";
+        public Object autoOffsetReset="latest";
+
+        public  Config(String[] args) {
+            topic = args[0];
+            format = args[1];
+            bootstrap_servers = args[2];
+            schemaRegistryURL = args[3];
+            subjectValueName = args[4];
+            checkpointDir = args[5];
+            startingOffsets = args[6];
+            mode = args[7];
+            msIntervall = Integer.parseInt(args[8]); ;
+            groupId=args[9];
+        }
+
     }
 
     static public String getLastestSchema(Config config) throws IOException, RestClientException {
@@ -62,22 +80,6 @@ public class Utils {
         return valueRestResponseSchema.getSchema().toString();
     }
 
-    static public Config parToConfig(String[] args) {
-        Config config = new Config();
-
-
-        config.topic = args[0];
-        config.format = args[1];
-        config.bootstrap_servers = args[2];
-        config.schemaRegistryURL = args[3];
-        ;
-        config.subjectValueName = args[4];
-        ;
-        config.checkpointDir = args[5];
-        config.startingOffsets = args[6];
-        config.mode = args[7];
-        return config;
-    }
 
     static public void createHiveTable(Dataset<Row> df, String tableName, SparkSession spark) {
         spark.sql("use hiveorg_prod");
@@ -98,7 +100,6 @@ public class Utils {
 
     static public Dataset<Row> createEmptyRDD(SparkSession spark, StructType schema) {
         return spark.createDataFrame(new ArrayList<>(), schema);
-
     }
 
     static public StructType avroToSparkSchema(org.apache.avro.Schema avroSchema) {
@@ -123,5 +124,6 @@ public class Utils {
 
         return new GenericRowWithSchema(objectArray, structType);
     }
+
 
 }

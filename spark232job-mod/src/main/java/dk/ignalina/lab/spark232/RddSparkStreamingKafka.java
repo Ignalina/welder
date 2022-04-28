@@ -71,7 +71,7 @@ public class RddSparkStreamingKafka {
 
 
     public static void main(String... args) {
-        config = Utils.parToConfig(args);
+        config = new Utils.Config(args);
 
 
         SparkConf conf = new SparkConf().setAppName("v202111061807  spark 2.3.2 streaming job to hive").

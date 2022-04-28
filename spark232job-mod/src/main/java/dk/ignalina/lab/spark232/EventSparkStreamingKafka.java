@@ -43,28 +43,21 @@ public class EventSparkStreamingKafka {
 
 
     public static void main(String... args) {
-        System.out.println("About to start streaming evenvt job");
 
-        config = Utils.parToConfig(args);
+        config = new Utils.Config(args);
 
+        SparkConf conf = CreateSparkConf("v20220428 spark 2.3.2 streaming event job ");
 
-        SparkConf conf = new SparkConf().setAppName("v20220425 spark 2.3.2 streaming event job ");
-
-        conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerialize");
-        conf.registerKryoClasses((Class<ConsumerRecord>[]) Arrays.asList(ConsumerRecord.class).toArray());
-
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(2000));
+        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
         SparkSession spark = SparkSession.builder().getOrCreate();
-
 
         Map<String, Object> kafkaParams = new HashMap<>();
 
         kafkaParams.put("bootstrap.servers", config.bootstrap_servers);
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", StringDeserializer.class);
-
-        kafkaParams.put("group.id", "groupid");
-        kafkaParams.put("auto.offset.reset", "latest");
+        kafkaParams.put("group.id", config.groupId);
+        kafkaParams.put("auto.offset.reset", config.startingOffsets);
         kafkaParams.put("enable.auto.commit", true);
 
         Collection<String> topics = Arrays.asList(config.topic);
@@ -81,20 +74,23 @@ public class EventSparkStreamingKafka {
 
         stream.foreachRDD(EventSparkStreamingKafka::callForEachRdd);
 
-        System.out.println("About to start ssc");
         ssc.start();
         try {
-            System.out.println("About to await term");
             ssc.awaitTermination();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("WE ARE DONE HA HA HA");
 
 
     }
 
-    private static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
+    public static SparkConf CreateSparkConf(String appName) {
+        SparkConf conf = new SparkConf().setAppName(appName);
+        conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerialize");
+        conf.registerKryoClasses((Class<ConsumerRecord>[]) Arrays.asList(ConsumerRecord.class).toArray());
+        return conf;
+    }
+    public static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
         System.out.println("rdd=" + rdd1.toDebugString());
         List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
@@ -102,4 +98,6 @@ public class EventSparkStreamingKafka {
             System.out.println("TODO Extract filename and use this to read the parquet file  !" + cr.value());
         }
     }
+
+
 }
