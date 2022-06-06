@@ -69,7 +69,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 gpg --list-keys
 
 cd spark301job-mod
-ls -l 
+pwd
 mvn clean install -U
 
 
