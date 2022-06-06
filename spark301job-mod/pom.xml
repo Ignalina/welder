@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>dk.ignalina.lab.spark301</groupId>
+  <version>0.0.1</version>
+
+  <artifactId>welder-spark-job</artifactId>
+  <packaging>jar</packaging>
+  <name>Welder spark 3.0.1 kafka </name>
+  <description>Streaming spark job , Event driven and Kafka/avro to Hive</description>
+
+  <url>https://github.com/Ignalina/welder</url>
+ <licenses>
+  <license>
+    <name>MIT-0</name>
+    <url>https://spdx.org/licenses/MIT-0.html</url>
+    <distribution>repo</distribution>
+    <comments>Do what you want license</comments>
+  </license>
+ </licenses>
+ <organization>  
+    <name>Ignalina Analyse &amp; Informatik ApS</name>
+    <url>https://www.ignalina.dk</url>
+</organization>  
+  
+   <developers>
+    <developer>
+      <id>rickard</id>
+      <name>Rickard Ernst Björn Lundin</name>
+      <email>rickard@ignalina.dk</email>
+      <url>https://www.ignalina.dk/rickard</url>
+      <organization>Ignalina Analyse &amp; Informatik ApS</organization>
+      <organizationUrl>https://www.ignalina.dk</organizationUrl>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>Europe/Copenhagen</timezone>
+      <properties>
+        <picUrl>https://www.ignalina.dk/rickard/pic</picUrl>
+      </properties>
+    </developer>
+  </developers>
+  <scm>  
+   <connection>scm:git:https://github.com/Ignalina/welder.git</connection>
+    <developerConnection>scm:git:https://github.com/Ignalina/welder.git</developerConnection>
+    <tag>main</tag>
+    <url>https://github.com/Ignalina/welder</url>
+  </scm>
+  
+  
+  
+  <distributionManagement>
+  <snapshotRepository>
+    <id>ossrh</id>
+    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+  </snapshotRepository>
+  </distributionManagement>
+
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <confluent.version>3.0.0</confluent.version>
+    <spark.version>3.0.1</spark.version>
+    <avro.version>1.9.2</avro.version>
+    <scala.version>2.12</scala.version>
+
+  </properties>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_${scala.version}</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_${scala.version}</artifactId>
+      <version>${spark.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming_${scala.version}</artifactId>
+      <version>${spark.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming-kafka-0-10_${scala.version}</artifactId>
+      <version>${spark.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+      <dependency>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-sql-kafka-0-10_${scala.version}</artifactId>
+          <version>${spark.version}</version>
+      </dependency>
+
+
+
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>0.10.0.0</version>
+    </dependency>
+
+
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}.0</version>
+    </dependency>
+
+      <dependency>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-schema-registry-client</artifactId>
+          <version>3.0.0</version>
+          <scope>compile</scope>
+      </dependency>
+
+
+
+  </dependencies>
+
+
+   
+      
+  
+        <profiles>
+<profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+<property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+
+
+
+  <build>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.0.4</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+
+ <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <version>2.9.1</version>
+      <executions>
+        <execution>
+          <id>attach-javadocs</id>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+          
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>job-driver-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+          <plugin>
+  <groupId>org.sonatype.plugins</groupId>
+  <artifactId>nexus-staging-maven-plugin</artifactId>
+  <version>1.6.7</version>
+  <extensions>true</extensions>
+  <configuration>
+     <serverId>ossrh</serverId>
+     <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+     <autoReleaseAfterClose>false</autoReleaseAfterClose>
+  </configuration>
+</plugin>
+
+            
+      
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-gpg-plugin</artifactId>
+  <version>1.6</version>
+  <executions>
+    <execution>
+      <id>sign-artifacts</id>
+        <phase>verify</phase>
+        <goals>
+          <goal>sign</goal>
+        </goals>
+      
+   <configuration>
+    <useAgent>true</useAgent>
+    <gpgArguments>
+      <arg>--batch</arg>
+      <arg>--pinentry-mode</arg>
+      <arg>loopback</arg>
+    </gpgArguments>
+  </configuration>
+      
+
+    </execution>
+  </executions>
+</plugin>
+      
+      
+    </plugins>
+  </build>
+  </profile>
+</profiles>
+  
+  
+ 
+  
+</project>
