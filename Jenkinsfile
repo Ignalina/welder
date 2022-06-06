@@ -15,7 +15,7 @@ pipeline {
         stage('Spark232') {
           steps {
             sh '''export M2_HOME=/usr/share/java/maven-3
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
 
 gpg --list-keys
@@ -41,7 +41,7 @@ ssh spark@10.1.1.190 \'cd /home/spark ; ./eventdriven_load_spark232.sh\'
         stage('Spark3.2.0') {
           steps {
             sh '''export M2_HOME=/usr/share/java/maven-3
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 #export JAVA_HOME=/usr/lib/jvm/default-jvm/
 
 
@@ -63,7 +63,7 @@ cd ..
         stage('spark3.0.1') {
           steps {
             sh '''export M2_HOME=/usr/share/java/maven-3
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
 
 gpg --list-keys
