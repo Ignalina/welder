@@ -43,8 +43,8 @@ public class EventSparkStreamingKafka {
 
     public static SparkConf CreateSparkConf(String appName) {
         SparkConf conf = new SparkConf().setAppName(appName);
-        conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerialize");
-        conf.registerKryoClasses((Class<ConsumerRecord>[]) Arrays.asList(ConsumerRecord.class).toArray());
+//        conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerialize");
+//        conf.registerKryoClasses((Class<ConsumerRecord>[]) Arrays.asList(ConsumerRecord.class).toArray());
         return conf;
     }
 
