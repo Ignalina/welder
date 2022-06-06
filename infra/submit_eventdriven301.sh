@@ -11,6 +11,7 @@ spark-submit \
 --driver-cores 4 \
 --verbose \
 --deploy-mode cluster \
+--supervise \
 ksmb.jar \
 testar kafka 10.1.1.90:9092 10.1.1.90:8081 testar-value /tmp/spark/checkpoint latest PERMISSIVE 1000 groupid &
 
