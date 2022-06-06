@@ -20,10 +20,6 @@
 package dk.ignalina.lab.spark301.base;
 
 //import com.databricks.spark.avro.SchemaConverters;
-import io.confluent.kafka.schemaregistry.client.rest.RestService;
-import io.confluent.kafka.schemaregistry.client.rest.entities.Schema;
-import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
-import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
@@ -70,15 +66,6 @@ public class Utils {
 
     }
 
-    static public String getLastestSchema(Config config) throws IOException, RestClientException {
-        return getLastestSchema(config.schemaRegistryURL, config.subjectValueName);
-    }
-
-    static public String getLastestSchema(String schemaRegistryURL, String subjectValueName) throws IOException, RestClientException {
-        RestService rs = new RestService(schemaRegistryURL);
-        Schema valueRestResponseSchema = rs.getLatestVersion(subjectValueName);
-        return valueRestResponseSchema.getSchema().toString();
-    }
 
 
     static public void createHiveTable(Dataset<Row> df, String tableName, SparkSession spark) {
