@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dk.ignalina.lab.spark301</groupId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
 
   <artifactId>welder-spark-job</artifactId>
   <packaging>jar</packaging>
@@ -92,6 +92,7 @@
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-core_${scala.version}</artifactId>
       <version>${spark.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -105,15 +106,8 @@
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-streaming-kafka-0-10_${scala.version}</artifactId>
       <version>${spark.version}</version>
-      <scope>provided</scope>
     </dependency>
 
-      <dependency>
-          <groupId>org.apache.spark</groupId>
-          <artifactId>spark-sql-kafka-0-10_${scala.version}</artifactId>
-          <version>${spark.version}</version>
-          <scope>provided</scope>
-      </dependency>
 
 
 
