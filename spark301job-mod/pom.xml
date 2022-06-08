@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dk.ignalina.lab.spark301</groupId>
-  <version>0.0.7</version>
+  <version>0.0.8</version>
 
   <artifactId>welder-spark-job</artifactId>
   <packaging>jar</packaging>
@@ -66,8 +66,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <confluent.version>3.0.0</confluent.version>
-    <spark.version>3.0.3</spark.version>
-    <avro.version>1.9.2</avro.version>
+    <spark.version>3.0.1</spark.version>
     <scala.version>2.12</scala.version>
 
   </properties>
@@ -92,7 +91,6 @@
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-core_${scala.version}</artifactId>
       <version>${spark.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
