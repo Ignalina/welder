@@ -77,7 +77,7 @@ mvn clean install -U
 
 
 
-mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-releases -Dfile=target/welder-spark-job-0.0.6.jar -DgroupId=dk.ignalina.lab.spark301 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.6 -DrepositoryId=x14-repo
+mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-releases -Dfile=target/welder-spark-job-0.0.7.jar -DgroupId=dk.ignalina.lab.spark301 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.7 -DrepositoryId=x14-repo
 
 scp ../infra/submit_eventdriven301.sh spark@10.1.1.196:/home/spark/
 
