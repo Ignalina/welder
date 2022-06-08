@@ -82,7 +82,7 @@
 
      <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-streaming-kafka-0-10-assembly__${scala.version}</artifactId>
+      <artifactId>spark-streaming-kafka-0-10-assembly_${scala.version}</artifactId>
       <version>${spark.version}</version>
     </dependency>
 
