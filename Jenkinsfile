@@ -72,12 +72,12 @@ cd spark301job-mod
 pwd
 mvn clean install -U
 
+export VER=0.0.11
 
 
 
 
-
-mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-releases -Dfile=target/welder-spark-job-0.0.10.jar -DgroupId=dk.ignalina.lab.spark301 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.10 -DrepositoryId=x14-repo
+mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-releases -Dfile=target/welder-spark-job-${VER}.jar -DgroupId=dk.ignalina.lab.spark301 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=${VER} -DrepositoryId=x14-repo
 
 scp ../infra/submit_eventdriven301.sh spark@10.1.1.196:/home/spark/
 
