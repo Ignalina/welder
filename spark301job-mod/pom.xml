@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dk.ignalina.lab.spark301</groupId>
-  <version>0.0.21</version>
+  <version>0.0.22</version>
 
   <artifactId>welder-spark-job</artifactId>
   <packaging>jar</packaging>
