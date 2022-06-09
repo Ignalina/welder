@@ -73,10 +73,8 @@ public class EventSparkStreamingKafka {
 
     }
 
-    public static JavaStreamingContext getStreamingContext(Utils.Config config) {
-        SparkConf conf = EventSparkStreamingKafka.CreateSparkConf("v20220610 spark 3.0.1 streaming event job ");
+    public static  JavaInputDStream<ConsumerRecord<String, GenericRecord>> getStreamingContext(Utils.Config config,JavaStreamingContext ssc) {
 
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
         SparkSession spark = SparkSession.builder().getOrCreate();
 
         Map<String, Object> kafkaParams = new HashMap<>();
@@ -103,7 +101,7 @@ public class EventSparkStreamingKafka {
             rdd.foreach(record -> callForEachRecord(record,spark));
         });
 
-        return ssc;
+        return stream;
     }
 
 
