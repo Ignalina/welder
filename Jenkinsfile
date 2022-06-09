@@ -10,6 +10,8 @@ pipeline {
       }
     }
 
+    stage('Pararell') {
+      parallel {
 
         stage('spark3.0.1') {
           steps {
@@ -38,7 +40,10 @@ ssh spark@10.1.1.196 \'cd /home/spark ; chmod +x submit_eventdriven301.sh; ./sub
           }
         }
 
+      }
+    }
 
+  }
   environment {
     JFROG_CLI_BUILD_NAME = 'JOB_NAME'
     JFROG_CLI_BUILD_NUMBER = 'BUILD_NUMBER'
