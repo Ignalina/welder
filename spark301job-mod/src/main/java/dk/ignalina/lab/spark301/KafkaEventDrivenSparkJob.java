@@ -30,8 +30,9 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
     static Utils.Config config;
 
     public static void fire(ConsumerRecord<String, GenericRecord> record) {
+        System.out.println("FIRE and action !!!!!!!!!!!!!!!1");
+
         SparkSession spark = SparkSession.builder().getOrCreate();
-        System.out.println("and action !!!!!!!!!!!!!!!1");
 
         JsonParser parser = new JsonParser();
         String message = ""+record.value();

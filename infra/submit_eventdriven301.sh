@@ -1,6 +1,6 @@
 #!/bin/bash
 rm -rf /home/spark/.ivy2/cache
-export VER=0.0.25
+export VER=0.0.26
 wget https://nexus.x14.se/repository/maven-releases/dk/ignalina/lab/spark301/welder-spark-job/${VER}/welder-spark-job-${VER}.jar
 
 spark-submit \
