@@ -33,6 +33,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
         actionImpl=new Action() {
             @Override
             public boolean fire(JsonObject jsonObject) {
+                System.out.println("Got CALLED");
                 System.out.println(jsonObject.toString());
                 return true;
             }

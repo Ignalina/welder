@@ -59,6 +59,8 @@ public class EventSparkStreamingKafka {
         System.out.println("my rdd=" + rdd1.toDebugString());
         List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
 
+        System.out.println("rows.size=" + rows.size());
+
         JsonParser parser = new JsonParser();
 
         for (ConsumerRecord<String, GenericRecord> cr : rows) {
