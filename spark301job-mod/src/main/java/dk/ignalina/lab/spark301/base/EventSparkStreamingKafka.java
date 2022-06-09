@@ -49,6 +49,7 @@ public class EventSparkStreamingKafka {
     }
 
     public static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
+        System.out.println("HELLOOOO actionImpl=" + actionImpl);
 
         if (null == actionImpl) {
             return; //

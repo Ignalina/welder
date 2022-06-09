@@ -40,7 +40,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
         config = new Utils.Config(args);
 
-        SparkConf conf = CreateSparkConf("v20220606 spark 3.0.1 streaming event job ");
+        SparkConf conf = CreateSparkConf("v20220608 spark 3.0.1 streaming event job ");
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
         SparkSession spark = SparkSession.builder().getOrCreate();
