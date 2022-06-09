@@ -10,55 +10,6 @@ pipeline {
       }
     }
 
-    stage('Spark232 insert only') {
-      parallel {
-        stage('Spark232') {
-          steps {
-            sh '''export M2_HOME=/usr/share/java/maven-3
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
-
-
-gpg --list-keys
-
-cd spark232job-mod
-mvn clean install -U
-
-
-
-#scp target/welder-spark-job-0.0.1.jar spark@10.1.1.190:.
-
-
-
-mvn deploy:deploy-file -Durl=https://nexus.x14.se/repository/maven-releases -Dfile=target/welder-spark-job-0.0.2.jar -DgroupId=dk.ignalina.lab.spark232 -DartifactId=welder-spark-job -Dpackaging=jar -Dversion=0.0.2 -DrepositoryId=x14-repo
-
-
-ssh spark@10.1.1.190 \'cd /home/spark ; ./eventdriven_load_spark232.sh\'
-
-'''
-          }
-        }
-
-        stage('Spark3.2.0') {
-          steps {
-            sh '''export M2_HOME=/usr/share/java/maven-3
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
-#export JAVA_HOME=/usr/lib/jvm/default-jvm/
-
-
-
-cd spark320job-mod
-mvn clean install -U
-ls -l target
-
-
-scp target/welder-delta-job-1.0-SNAPSHOT.jar spark@10.1.1.193:.
-ssh spark@10.1.1.193 \'/home/spark/welder_load_spark320.sh\'
-
-cd ..
-
-'''
-          }
-        }
 
         stage('spark3.0.1') {
           steps {
@@ -72,7 +23,7 @@ cd spark301job-mod
 pwd
 mvn clean install -U
 
-export VER=0.0.15
+export VER=0.0.16
 
 
 
