@@ -1,11 +1,11 @@
 #!/bin/bash
 rm -rf /home/spark/.ivy2/cache
-export VER=0.0.24
+export VER=0.0.25
 wget https://nexus.x14.se/repository/maven-releases/dk/ignalina/lab/spark301/welder-spark-job/${VER}/welder-spark-job-${VER}.jar
 
 spark-submit \
 --conf "spark.jars.ivySettings=/home/spark/.ivy2/ivysettings.xml" \
---class dk.ignalina.lab.spark301.KafkaEventDrivenSparkJob2 \
+--class dk.ignalina.lab.spark301.KafkaEventDrivenSparkJob \
 --repositories https://nexus.x14.se/repository/maven-public,https://nexus.x14.se/repository/maven-releases \
 --driver-memory 4g \
 --master spark://10.1.1.196:7077 \

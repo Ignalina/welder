@@ -1,6 +1,7 @@
 package dk.ignalina.lab.spark301;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dk.ignalina.lab.spark301.base.Action;
 import dk.ignalina.lab.spark301.base.EventSparkStreamingKafka;
 import dk.ignalina.lab.spark301.base.Utils;
@@ -10,6 +11,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -26,19 +29,32 @@ import java.util.Map;
 public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
     static Utils.Config config;
 
+    public static void fire(ConsumerRecord<String, GenericRecord> record) {
+        SparkSession spark = SparkSession.builder().getOrCreate();
+        System.out.println("and action !!!!!!!!!!!!!!!1");
+
+        JsonParser parser = new JsonParser();
+        String message = ""+record.value();
+
+        System.out.println("Parse string to json object" + message);
+        JsonObject jo = null;
+        try {
+            jo = parser.parse(message).getAsJsonObject();
+        } catch (IllegalStateException ei) {
+            System.out.println("Invalid unparsable json:" + ei.toString());
+        }
+
+
+        System.out.println(jo.toString());
+        String filename = jo.get("body").getAsJsonObject().get("name").getAsString();
+        System.out.println("Fick ett event med S3 fil och body.name=" + filename);
+        Dataset<Row> parquetFileDF = spark.read().parquet(filename);
+        parquetFileDF.printSchema();
+    }
 
 
     public static void main(String... args) {
 
-        Action actionImpl = new Action() {
-
-            @Override
-            public boolean fire(JsonObject jsonObject, SparkSession spark) {
-                System.out.println("Got CALLED");
-                System.out.println(jsonObject.toString());
-                return true;
-            }
-        };
 
         config = new Utils.Config(args);
 
@@ -71,7 +87,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 //        stream.foreachRDD(EventSparkStreamingKafka::callForEachRdd);
         stream.foreachRDD(rdd -> {
 //            System.out.println("--- New RDD with " + rdd.partitions().size() + " partitions and " + rdd.count() + " records");
-            rdd.foreach(record -> System.out.println("ROKORDEN="+record.toString()));
+            rdd.foreach(record -> fire(record));
         });
 
         ssc.start();
