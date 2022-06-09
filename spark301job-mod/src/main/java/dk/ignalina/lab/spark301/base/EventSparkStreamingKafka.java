@@ -56,7 +56,7 @@ public class EventSparkStreamingKafka {
         }
 
         JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
-        System.out.println("rdd=" + rdd1.toDebugString());
+        System.out.println("my rdd=" + rdd1.toDebugString());
         List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
 
         JsonParser parser = new JsonParser();
