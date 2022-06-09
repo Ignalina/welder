@@ -50,6 +50,7 @@ public class EventSparkStreamingKafka {
 
 
     public static void callForEachRecord(ConsumerRecord<String, GenericRecord> record, SparkSession spark) {
+        System.out.println("Hurra got a record" );
 
         if (null == actionImpl) {
             return; //
