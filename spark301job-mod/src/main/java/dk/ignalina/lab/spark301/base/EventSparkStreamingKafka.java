@@ -41,7 +41,7 @@ import java.util.Map;
 
 public class EventSparkStreamingKafka {
 
-    public static Action actionImpl;
+//    public static Action actionImpl;
 
     public static SparkConf CreateSparkConf(String appName) {
         SparkConf conf = new SparkConf().setAppName(appName);
@@ -49,12 +49,12 @@ public class EventSparkStreamingKafka {
     }
 
 
-    public static void callForEachRecord(ConsumerRecord<String, GenericRecord> record, SparkSession spark) {
+    public static void callForEachRecord(ConsumerRecord<String, GenericRecord> record, SparkSession spark,Action actionImpl) {
         System.out.println("Hurra got a record" );
 
-        if (null == actionImpl) {
-            return; //
-        }
+  //      if (null == actionImpl) {
+ //           return; //
+ //       }
 
         JsonParser parser = new JsonParser();
         String message = ""+record.value();
@@ -73,7 +73,7 @@ public class EventSparkStreamingKafka {
 
     }
 
-    public static  JavaInputDStream<ConsumerRecord<String, GenericRecord>> getStreamingContext(Utils.Config config,JavaStreamingContext ssc) {
+    public static  JavaInputDStream<ConsumerRecord<String, GenericRecord>> getStreamingContext(Utils.Config config,JavaStreamingContext ssc,Action actionImpl) {
 
         SparkSession spark = SparkSession.builder().getOrCreate();
 
@@ -100,7 +100,7 @@ public class EventSparkStreamingKafka {
         JavaRDD<String> rddString;
         stream.foreachRDD(rdd -> {
 //            rdd.foreach(record -> System.out.println("ROKORDEN="+record.toString()));
-            rdd.foreach(record -> callForEachRecord(record,spark));
+            rdd.foreach(record -> callForEachRecord(record,spark,actionImpl));
 
         });
 

@@ -19,14 +19,14 @@ public class KafkaEventDrivenSparkJob2 extends EventSparkStreamingKafka {
 
     public static void main(String... args) {
 
-        actionImpl=new Action() {
+        Action actionImpl = new Action() {
             @Override
             public boolean fire(JsonObject jsonObject, SparkSession spark) {
                 System.out.println("and action !!!!!!!!!!!!!!!1");
 
                 System.out.println(jsonObject.toString());
-                String filename=jsonObject.get("body").getAsJsonObject().get("name").getAsString();
-                System.out.println("Fick ett event med S3 fil och body.name="+filename);
+                String filename = jsonObject.get("body").getAsJsonObject().get("name").getAsString();
+                System.out.println("Fick ett event med S3 fil och body.name=" + filename);
                 Dataset<Row> parquetFileDF = spark.read().parquet(filename);
                 parquetFileDF.printSchema();
                 return true;
@@ -37,7 +37,7 @@ public class KafkaEventDrivenSparkJob2 extends EventSparkStreamingKafka {
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
 
-        JavaInputDStream<ConsumerRecord<String, GenericRecord>> stream = EventSparkStreamingKafka.getStreamingContext(config, ssc);
+        JavaInputDStream<ConsumerRecord<String, GenericRecord>> stream = EventSparkStreamingKafka.getStreamingContext(config, ssc,actionImpl);
 
         ssc.start();
         try {
