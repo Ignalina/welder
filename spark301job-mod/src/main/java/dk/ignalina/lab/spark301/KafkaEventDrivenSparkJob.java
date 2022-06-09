@@ -30,10 +30,10 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
     public static void main(String... args) {
 
-        actionImpl=new Action() {
+        Action actionImpl = new Action() {
 
             @Override
-        public boolean fire(JsonObject jsonObject, SparkSession spark) {
+            public boolean fire(JsonObject jsonObject, SparkSession spark) {
                 System.out.println("Got CALLED");
                 System.out.println(jsonObject.toString());
                 return true;
