@@ -69,8 +69,8 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
 //        stream.foreachRDD(EventSparkStreamingKafka::callForEachRdd);
         stream.foreachRDD(rdd -> {
-            System.out.println("--- New RDD with " + rdd.partitions().size() + " partitions and " + rdd.count() + " records");
-            rdd.foreach(record -> System.out.println(record.toString()));
+//            System.out.println("--- New RDD with " + rdd.partitions().size() + " partitions and " + rdd.count() + " records");
+            rdd.foreach(record -> System.out.println("ROKORDEN="+record.toString()));
         });
 
         ssc.start();
