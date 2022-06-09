@@ -19,7 +19,6 @@
 
 package dk.ignalina.lab.spark301.base;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.avro.generic.GenericRecord;
@@ -35,7 +34,10 @@ import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EventSparkStreamingKafka {
 
@@ -43,29 +45,20 @@ public class EventSparkStreamingKafka {
 
     public static SparkConf CreateSparkConf(String appName) {
         SparkConf conf = new SparkConf().setAppName(appName);
-//        conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerialize");
-//        conf.registerKryoClasses((Class<ConsumerRecord>[]) Arrays.asList(ConsumerRecord.class).toArray());
         return conf;
     }
 
-    public static void callForEachRdd(JavaRDD<ConsumerRecord<String, GenericRecord>> rdd) {
-        System.out.println("HELLOOOO actionImpl=" + actionImpl);
+
+    public static void callForEachRecord(ConsumerRecord<String, GenericRecord> record, SparkSession spark) {
 
         if (null == actionImpl) {
             return; //
         }
 
-        JavaRDD<ConsumerRecord<String, GenericRecord>> rdd1 = rdd;
-        System.out.println("my rdd=" + rdd1.toDebugString());
-        List<ConsumerRecord<String, GenericRecord>> rows = rdd1.collect();
-
-        System.out.println("rows.size=" + rows.size());
-
         JsonParser parser = new JsonParser();
+        String message = ""+record.value();
 
-        for (ConsumerRecord<String, GenericRecord> cr : rows) {
-            System.out.println("Parse string to json object" + cr.value());
-            String message = ""+cr.value();
+        System.out.println("Parse string to json object" + message);
             JsonObject jo = null;
             try {
                 jo = parser.parse(message).getAsJsonObject();
@@ -74,10 +67,42 @@ public class EventSparkStreamingKafka {
             }
 
             if (jo != null) {
-                actionImpl.fire(jo);
+                actionImpl.fire(jo,spark);
             }
 
-        }
+    }
+
+    public static JavaStreamingContext getStreamingContext(Utils.Config config) {
+        SparkConf conf = EventSparkStreamingKafka.CreateSparkConf("v20220610 spark 3.0.1 streaming event job ");
+
+        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
+        SparkSession spark = SparkSession.builder().getOrCreate();
+
+        Map<String, Object> kafkaParams = new HashMap<>();
+
+        kafkaParams.put("bootstrap.servers", config.bootstrap_servers);
+        kafkaParams.put("key.deserializer", StringDeserializer.class);
+        kafkaParams.put("value.deserializer", StringDeserializer.class);
+        kafkaParams.put("group.id", config.groupId);
+        kafkaParams.put("auto.offset.reset", config.startingOffsets);
+        kafkaParams.put("enable.auto.commit", true);
+
+        Collection<String> topics = Arrays.asList(config.topic);
+
+        JavaInputDStream<ConsumerRecord<String, GenericRecord>> stream =
+                KafkaUtils.createDirectStream(
+                        ssc,
+                        LocationStrategies.PreferConsistent(),
+                        ConsumerStrategies.<String, GenericRecord>Subscribe(topics, kafkaParams)
+                );
+
+
+        JavaRDD<String> rddString;
+        stream.foreachRDD(rdd -> {
+            rdd.foreach(record -> callForEachRecord(record,spark));
+        });
+
+        return ssc;
     }
 
 

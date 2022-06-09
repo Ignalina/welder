@@ -20,18 +20,14 @@
 package dk.ignalina.lab.spark301.base;
 
 //import com.databricks.spark.avro.SchemaConverters;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.spark.api.java.JavaRDD;
+
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema;
 import org.apache.spark.sql.types.StructType;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 public class Utils {
@@ -88,8 +84,6 @@ public class Utils {
     static public Dataset<Row> createEmptyRDD(SparkSession spark, StructType schema) {
         return spark.createDataFrame(new ArrayList<>(), schema);
     }
-
-
 
 
 }
