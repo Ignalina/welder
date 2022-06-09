@@ -72,7 +72,7 @@ cd spark301job-mod
 pwd
 mvn clean install -U
 
-export VER=0.0.14
+export VER=0.0.15
 
 
 
