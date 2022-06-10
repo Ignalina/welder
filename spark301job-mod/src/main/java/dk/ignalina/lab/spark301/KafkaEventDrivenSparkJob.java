@@ -49,8 +49,11 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
         System.out.println(jo.toString());
         String filename = jo.get("body").getAsJsonObject().get("name").getAsString();
         System.out.println("Fick ett event med S3 fil och body.name=" + filename);
- //       Dataset<Row> parquetFileDF = spark.read().parquet(filename);
-//        parquetFileDF.printSchema();
+        SparkSession s = SparkSession.active();
+        Dataset<Row> parquetFileDF = s.read().parquet(filename);
+        System.out.println("Överlevde session" );
+
+        parquetFileDF.printSchema();
     }
 
 
@@ -90,6 +93,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 //            System.out.println("--- New RDD with " + rdd.partitions().size() + " partitions and " + rdd.count() + " records");
             rdd.foreach(record -> fire(record));
         });
+
 
         ssc.start();
         try {
