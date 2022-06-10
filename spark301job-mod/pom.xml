@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dk.ignalina.lab.spark301</groupId>
-  <version>0.0.44</version>
+  <version>0.0.45</version>
 
   <artifactId>welder-spark-job</artifactId>
   <packaging>jar</packaging>
@@ -127,8 +127,8 @@
       </dependency>
 
       <dependency>
-          <groupId>aws-java-sdk-bundle</groupId>
-          <artifactId>com.amazonaws</artifactId>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-bundle</artifactId>
           <version>1.12.236</version>
       </dependency>
 

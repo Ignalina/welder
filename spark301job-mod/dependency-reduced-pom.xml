@@ -4,7 +4,7 @@
   <groupId>dk.ignalina.lab.spark301</groupId>
   <artifactId>welder-spark-job</artifactId>
   <name>Welder spark 3.0.1 kafka</name>
-  <version>0.0.18</version>
+  <version>0.0.44</version>
   <description>Streaming spark job , Event driven and Kafka/avro to Hive</description>
   <url>https://github.com/Ignalina/welder</url>
   <developers>
