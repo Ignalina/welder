@@ -2,15 +2,12 @@ package dk.ignalina.lab.spark301;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dk.ignalina.lab.spark301.base.Action;
 import dk.ignalina.lab.spark301.base.EventSparkStreamingKafka;
 import dk.ignalina.lab.spark301.base.Utils;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.hadoop.yarn.webapp.example.HelloWorld;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -21,15 +18,12 @@ import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
     static Utils.Config config;
 
-    public static void fire(ConsumerRecord<String, GenericRecord> record) {
+    public static String fire(ConsumerRecord<String, GenericRecord> record) {
         System.out.println("FIRE and action !!!!!!!!!!!!!!!1");
 
 //        SparkSession spark = SparkSession.active();
@@ -49,11 +43,8 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
         System.out.println(jo.toString());
         String filename = jo.get("body").getAsJsonObject().get("name").getAsString();
         System.out.println("Fick ett event med S3 fil och body.name=" + filename);
-        SparkSession s = SparkSession.active();
-        Dataset<Row> parquetFileDF = s.read().parquet(filename);
-        System.out.println("Överlevde session" );
-
-        parquetFileDF.printSchema();
+//        SparkSession s = SparkSession.active();
+        return filename;
     }
 
 
@@ -86,14 +77,44 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
                 );
 
 
-        JavaRDD<String> rddString;
+//        JavaRDD<String> rddString;
+/*
+        stream.map(message -> message.value()).
 
-//        stream.foreachRDD(EventSparkStreamingKafka::callForEachRdd);
+                foreachRDD(javaRDD -> {
+                    JavaRDD<Row> newRDD = javaRDD.map(x -> {
+                        return Utils.avroToRowConverter(x, schemaStructured);
+                    });
+
+
+                    System.out.println(" ROW count=" + newRDD.count() + " antal ROW partitioner=" + newRDD.getNumPartitions() + "");
+                    Dataset<Row> df2 = spark.createDataFrame(newRDD, schemaStructured);
+                    df2.write().insertInto(config.topic);
+                });
+*/
+
         stream.foreachRDD(rdd -> {
-//            System.out.println("--- New RDD with " + rdd.partitions().size() + " partitions and " + rdd.count() + " records");
-            rdd.foreach(record -> fire(record));
+            List<ConsumerRecord<String, GenericRecord>> c = rdd.collect();
+
+            c.forEach((record) -> {
+                System.out.println(record);
+                String filename=fire(record);
+
+                Dataset<Row> parquetFileDF = spark.read().parquet(filename);
+                System.out.println("Överlevde session" );
+
+                parquetFileDF.printSchema();
+
+            });
+
+//            rdd.foreach(record -> fire(record));
         });
 
+        /*
+        stream.foreachRDD(rdd -> {
+            rdd.foreach(record -> fire(record));
+        });
+*/
 
         ssc.start();
         try {
