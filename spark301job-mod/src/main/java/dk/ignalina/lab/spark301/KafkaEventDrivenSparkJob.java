@@ -8,6 +8,7 @@ import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -23,7 +24,7 @@ import java.util.*;
 public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
     static Utils.Config config;
 
-    public static String fire(ConsumerRecord<String, GenericRecord> record, SparkSession spark) {
+    public static String fire(ConsumerRecord<String, GenericRecord> record) {
         System.out.println("FIRE and action !!!!!!!!!!!!!!!1");
 
 //        SparkSession spark = SparkSession.active();
@@ -43,8 +44,6 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
         System.out.println(jo.toString());
         String filename = jo.get("body").getAsJsonObject().get("name").getAsString();
         System.out.println("Fick ett event med S3 fil och body.name=" + filename);
-//        SparkSession s = SparkSession.active();
-        Dataset<Row> parquetFileDF = spark.read().parquet(filename);
 
         return filename;
     }
@@ -57,8 +56,15 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
         SparkConf conf = CreateSparkConf("v20220608 spark 3.0.1 streaming event job ");
 
+
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
-        SparkSession spark = SparkSession.builder().getOrCreate();
+        SparkSession spark = SparkSession.builder().
+                config("spark.hadoop.fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
+                config("fs.s3a.access.key",config.s3AccessKey).
+                config("fs.s3a.secret.key",config.s3SecretKey).
+                config("fs.s3a.endpoint", config.s3EndPoint).
+                config("fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
+                getOrCreate();
 
         Map<String, Object> kafkaParams = new HashMap<>();
 
@@ -79,46 +85,11 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
                 );
 
 
-//        JavaRDD<String> rddString;
-/*
-        stream.map(message -> message.value()).
-
-                foreachRDD(javaRDD -> {
-                    JavaRDD<Row> newRDD = javaRDD.map(x -> {
-                        return Utils.avroToRowConverter(x, schemaStructured);
-                    });
-
-
-                    System.out.println(" ROW count=" + newRDD.count() + " antal ROW partitioner=" + newRDD.getNumPartitions() + "");
-                    Dataset<Row> df2 = spark.createDataFrame(newRDD, schemaStructured);
-                    df2.write().insertInto(config.topic);
-                });
-*/
-
-
-        /*
         stream.foreachRDD(rdd -> {
-            List<ConsumerRecord<String, GenericRecord>> c = rdd.collect();
-            System.out.println("Gjorde collect"+c.size() );
+            rdd.foreach(record -> fire(record));
+//            JavaRDD<String> d = rdd.map(KafkaEventDrivenSparkJob::fire);
 
-            c.forEach((record) -> {
-                System.out.println("per record .." );
-
-                System.out.println(record);
-                String filename=fire(record);
-
-                Dataset<Row> parquetFileDF = spark.read().parquet(filename);
-                System.out.println("Överlevde session" );
-
-                parquetFileDF.printSchema();
-
-            });
-
-        });
-*/
-
-        stream.foreachRDD(rdd -> {
-            rdd.foreach(record -> fire(record,spark));
+            spark.read().parquet("s3a:/utkatalog/F800101.220405.smoketest.txt_1.parquet");
         });
 
 

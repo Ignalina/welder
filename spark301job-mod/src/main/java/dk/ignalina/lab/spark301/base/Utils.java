@@ -46,7 +46,9 @@ public class Utils {
         public int msIntervall = 2000;
         public Object groupId="groupid";
         public Object autoOffsetReset="latest";
-
+        public String s3AccessKey;
+        public String s3SecretKey;
+        public String s3EndPoint;
         public  Config(String[] args) {
             topic = args[0];
             format = args[1];
@@ -58,6 +60,9 @@ public class Utils {
             mode = args[7];
             msIntervall = Integer.parseInt(args[8]); ;
             groupId=args[9];
+            s3AccessKey=args[10];
+            s3SecretKey=args[11];
+            s3EndPoint=args[12];
         }
 
     }
