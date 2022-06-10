@@ -98,6 +98,8 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
             System.out.println("Gjorde collect" );
 
             c.forEach((record) -> {
+                System.out.println("per record .." );
+
                 System.out.println(record);
                 String filename=fire(record);
 
