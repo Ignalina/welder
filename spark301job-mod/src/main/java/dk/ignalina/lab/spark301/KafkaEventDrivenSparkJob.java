@@ -23,7 +23,7 @@ import java.util.*;
 public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
     static Utils.Config config;
 
-    public static String fire(ConsumerRecord<String, GenericRecord> record) {
+    public static String fire(ConsumerRecord<String, GenericRecord> record, SparkSession spark) {
         System.out.println("FIRE and action !!!!!!!!!!!!!!!1");
 
 //        SparkSession spark = SparkSession.active();
@@ -44,6 +44,8 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
         String filename = jo.get("body").getAsJsonObject().get("name").getAsString();
         System.out.println("Fick ett event med S3 fil och body.name=" + filename);
 //        SparkSession s = SparkSession.active();
+        Dataset<Row> parquetFileDF = spark.read().parquet(filename);
+
         return filename;
     }
 
@@ -93,10 +95,12 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
                 });
 */
 
+
+        /*
         stream.foreachRDD(rdd -> {
             List<ConsumerRecord<String, GenericRecord>> c = rdd.collect();
             System.out.println("Gjorde collect"+c.size() );
-/*
+
             c.forEach((record) -> {
                 System.out.println("per record .." );
 
@@ -109,15 +113,14 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
                 parquetFileDF.printSchema();
 
             });
+
+        });
 */
-//            rdd.foreach(record -> fire(record));
+
+        stream.foreachRDD(rdd -> {
+            rdd.foreach(record -> fire(record,spark));
         });
 
-        /*
-        stream.foreachRDD(rdd -> {
-            rdd.foreach(record -> fire(record));
-        });
-*/
 
         ssc.start();
         try {
