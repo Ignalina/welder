@@ -64,6 +64,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
                 config("fs.s3a.secret.key",config.s3SecretKey).
                 config("fs.s3a.endpoint", config.s3EndPoint).
                 config("fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
+                config("fs.s3a.path.style.access","true").
                 getOrCreate();
 
         Map<String, Object> kafkaParams = new HashMap<>();
