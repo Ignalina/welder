@@ -54,11 +54,11 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
         config = new Utils.Config(args);
 
-        SparkConf conf = CreateSparkConf("v20220608 spark 3.0.1 streaming event job ");
+        SparkConf conf = CreateSparkConf("v20220610 spark 3.0.1 streaming event job ");
 
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
-        SparkSession spark = SparkSession.builder().
+        SparkSession spark = SparkSession.builder().master("spark://10.1.1.196:7077").
                 config("spark.hadoop.fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
                 config("fs.s3a.access.key",config.s3AccessKey).
                 config("fs.s3a.secret.key",config.s3SecretKey).
@@ -88,6 +88,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
         stream.foreachRDD(rdd -> {
             rdd.foreach(record -> fire(record));
 //            JavaRDD<String> d = rdd.map(KafkaEventDrivenSparkJob::fire);
+            System.out.println("sssspark="+spark);
 
             Dataset<Row> df = spark.read().parquet("s3a:/utkatalog/F800101.220405.smoketest.txt_1.parquet");
             df.printSchema();

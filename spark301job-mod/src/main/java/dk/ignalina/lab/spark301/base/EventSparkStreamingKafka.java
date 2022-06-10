@@ -98,7 +98,7 @@ public class EventSparkStreamingKafka {
 
 
         JavaRDD<String> rddString;
-        stream.foreachRDD(rdd -> {
+        stream. foreachRDD(rdd -> {
 //            rdd.foreach(record -> System.out.println("ROKORDEN="+record.toString()));
             rdd.foreach(record -> callForEachRecord(record,spark,actionImpl));
 
