@@ -95,8 +95,8 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
         stream.foreachRDD(rdd -> {
             List<ConsumerRecord<String, GenericRecord>> c = rdd.collect();
-            System.out.println("Gjorde collect" );
-
+            System.out.println("Gjorde collect"+c.size() );
+/*
             c.forEach((record) -> {
                 System.out.println("per record .." );
 
@@ -109,7 +109,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
                 parquetFileDF.printSchema();
 
             });
-
+*/
 //            rdd.foreach(record -> fire(record));
         });
 
