@@ -32,7 +32,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
     public static void fire(ConsumerRecord<String, GenericRecord> record) {
         System.out.println("FIRE and action !!!!!!!!!!!!!!!1");
 
-        SparkSession spark = SparkSession.active();
+//        SparkSession spark = SparkSession.active();
 
         JsonParser parser = new JsonParser();
         String message = ""+record.value();
@@ -49,8 +49,8 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
         System.out.println(jo.toString());
         String filename = jo.get("body").getAsJsonObject().get("name").getAsString();
         System.out.println("Fick ett event med S3 fil och body.name=" + filename);
-        Dataset<Row> parquetFileDF = spark.read().parquet(filename);
-        parquetFileDF.printSchema();
+ //       Dataset<Row> parquetFileDF = spark.read().parquet(filename);
+//        parquetFileDF.printSchema();
     }
 
 
