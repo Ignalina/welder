@@ -89,7 +89,8 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
             rdd.foreach(record -> fire(record));
 //            JavaRDD<String> d = rdd.map(KafkaEventDrivenSparkJob::fire);
 
-            spark.read().parquet("s3a:/utkatalog/F800101.220405.smoketest.txt_1.parquet");
+            Dataset<Row> df = spark.read().parquet("s3a:/utkatalog/F800101.220405.smoketest.txt_1.parquet");
+            df.printSchema();
         });
 
 
