@@ -7,6 +7,7 @@ spark-submit \
 --conf "spark.jars.ivySettings=/home/spark/.ivy2/ivysettings.xml" \
 --class dk.ignalina.lab.spark301.KafkaEventDrivenSparkJob \
 --repositories https://nexus.x14.se/repository/maven-public,https://nexus.x14.se/repository/maven-releases \
+--packages org.apache.hadoop:hadoop-aws:3.0.1,com.amazonaws:aws-java-sdk-bundle:1.12.236 \
 --driver-memory 4g \
 --master spark://10.1.1.196:7077 \
 --driver-cores 4 \
