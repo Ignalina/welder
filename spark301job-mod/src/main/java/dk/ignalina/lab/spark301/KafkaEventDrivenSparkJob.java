@@ -18,34 +18,27 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.codehaus.janino.Java;
 
 import java.util.*;
 
 public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
     static Utils.Config config;
+    static JsonParser parser;
 
-    public static String fire(ConsumerRecord<String, GenericRecord> record) {
-        System.out.println("FIRE and action !!!!!!!!!!!!!!!1");
+    public static String extractFileName(ConsumerRecord<String, GenericRecord> record) {
 
-//        SparkSession spark = SparkSession.active();
-
-        JsonParser parser = new JsonParser();
         String message = ""+record.value();
-
-        System.out.println("Parse string to json object" + message);
         JsonObject jo = null;
         try {
             jo = parser.parse(message).getAsJsonObject();
         } catch (IllegalStateException ei) {
-            System.out.println("Invalid unparsable json:" + ei.toString());
+            String res="JSON CONTAINED NO PARSABLE FILENAME";
+            System.out.println(res);
+            return res;
         }
 
-
-        System.out.println(jo.toString());
-        String filename = jo.get("body").getAsJsonObject().get("name").getAsString();
-        System.out.println("Fick ett event med S3 fil och body.name=" + filename);
-
-        return filename;
+        return jo.get("body").getAsJsonObject().get("name").getAsString();
     }
 
 
@@ -53,8 +46,9 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
 
         config = new Utils.Config(args);
+        parser = new JsonParser();
 
-        SparkConf conf = CreateSparkConf("v20220610 spark 3.0.1 streaming event job ");
+        SparkConf conf = CreateSparkConf("v20220612 spark 3.0.1 Streaming /event driven spark job");
 
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(config.msIntervall));
@@ -87,13 +81,16 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
 
         stream.foreachRDD(rdd -> {
-            rdd.foreach(record -> fire(record));
-//            JavaRDD<String> d = rdd.map(KafkaEventDrivenSparkJob::fire);
-            System.out.println("sssspark="+spark);
+                    JavaRDD<String> filenames = rdd.map(record -> extractFileName(record)); // VARNING/TODO: List needs to be sorted on date for correct Delta ingest order.
 
-            Dataset<Row> df = spark.read().parquet("s3a://bucket1/utkatalog/F800101.220405.smoketest.txt_1.parquet");
-            df.printSchema();
-        });
+                    filenames.collect().forEach(fileName -> {
+                        System.out.println("Filename from JSON=" + fileName);
+                        Dataset<Row> df = spark.read().parquet(fileName);
+                        df.printSchema();
+                    });
+                });
+
+
 
 
         ssc.start();
@@ -101,6 +98,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
             ssc.awaitTermination();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            // TODO Make sureKAFKA read offset is getting NOT updated  !
         }
 
 
