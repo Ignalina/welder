@@ -32,7 +32,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
         String message = ""+record.value();
         JsonObject jo = null;
         try {
-            jo = parser.parse(message).getAsJsonObject();
+            jo = new JsonParser().parse(message).getAsJsonObject();
         } catch (IllegalStateException ei) {
             String res="JSON CONTAINED NO PARSABLE FILENAME";
             System.out.println(res);
