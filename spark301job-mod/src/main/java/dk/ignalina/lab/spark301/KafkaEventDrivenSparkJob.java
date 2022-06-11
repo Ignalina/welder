@@ -37,8 +37,10 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
             System.out.println(res);
             return res;
         }
+        String filename=jo.get("body").getAsJsonObject().get("name").getAsString();
+        System.out.println("Filename extraced from JSON=" + filename);
 
-        return jo.get("body").getAsJsonObject().get("name").getAsString();
+        return filename;
     }
 
 
@@ -81,15 +83,16 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
 
         stream.foreachRDD(rdd -> {
-                    JavaRDD<String> filenames = rdd.map(record -> extractFileName(record)); // VARNING/TODO: List needs to be sorted on date for correct Delta ingest order.
+                      rdd.collect().forEach(record -> {
+                          String fileName=extractFileName(record);
+                          System.out.println("Filename from JSON=" + fileName);
+                          Dataset<Row> df = spark.read().parquet(fileName);
+                          df.printSchema();
 
-                    filenames.collect().forEach(fileName -> {
-                        System.out.println("Filename from JSON=" + fileName);
-                        Dataset<Row> df = spark.read().parquet(fileName);
-                        df.printSchema();
-                    });
+                          // TODO: List needs to be sorted on date for correct Delta ingest order.
+
+                      });
                 });
-
 
 
 
