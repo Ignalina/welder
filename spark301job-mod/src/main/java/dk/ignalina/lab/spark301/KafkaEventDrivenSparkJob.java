@@ -83,7 +83,7 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
 
         stream.foreachRDD(rdd -> {
-                      rdd.collect().forEach(record -> {
+                      rdd.foreach(record -> {
                           String fileName=extractFileName(record);
                           System.out.println("Filename from JSON=" + fileName);
                           Dataset<Row> df = spark.read().parquet(fileName);

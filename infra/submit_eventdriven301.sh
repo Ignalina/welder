@@ -1,6 +1,6 @@
 #!/bin/bash
 rm -rf /home/spark/.ivy2/cache
-export VER=0.0.49
+export VER=0.0.50
 wget https://nexus.x14.se/repository/maven-releases/dk/ignalina/lab/spark301/welder-spark-job/${VER}/welder-spark-job-${VER}.jar
 
 spark-submit \
@@ -15,7 +15,7 @@ spark-submit \
 --deploy-mode cluster \
 --supervise \
 welder-spark-job-${VER}.jar \
-testar kafka 10.1.1.90:9092 10.1.1.90:8081 testar-value /tmp/spark/checkpoint latest PERMISSIVE 1000 groupid rickard heffaklump apiminio.x14.se &
+testar kafka 10.1.1.90:9092 10.1.1.90:8081 testar-value /tmp/spark/checkpoint latest PERMISSIVE 1000 groupid rickard tihi apiminio.x14.se &
 
 #--packages dk.ignalina.lab.spark301:welder-spark-job:0.0.15,org.apache.spark:spark-streaming-kafka-0-10_2.12:3.0.1,org.apache.spark:spark-streaming_2.12:3.0.1 \
 
