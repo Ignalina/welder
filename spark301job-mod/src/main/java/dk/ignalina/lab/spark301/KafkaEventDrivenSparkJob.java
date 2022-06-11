@@ -84,7 +84,10 @@ public class KafkaEventDrivenSparkJob extends EventSparkStreamingKafka {
 
 
         stream.foreachRDD(rdd -> {
+                System.out.println("about to get results" );
+
                     JavaRDD<String> filenames = rdd.map(record -> extractFileName(record)); // VARNING/TODO: List needs to be sorted on date for correct Delta ingest order.
+            System.out.println("got  results" );
 
                     filenames.collect().forEach(fileName -> {
                         System.out.println("Filename from JSON=" + fileName);
