@@ -54,7 +54,7 @@ public class KafkaEventDrivenSparkJob {
         String message = ""+record.value();
         JsonObject jo = null;
         try {
-            jo = new JsonParser().parse(message).getAsJsonObject();
+            jo = JsonParser.parseString(message).getAsJsonObject();
         } catch (IllegalStateException ei) {
             String res="JSON CONTAINED NO PARSABLE FILENAME";
             System.out.println(res);

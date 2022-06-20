@@ -19,7 +19,9 @@
 
 package dk.ignalina.lab.spark320.base;
 
-import org.apache.avro.generic.GenericRecord;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.apache.hadoop.shaded.org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
@@ -59,6 +61,7 @@ public class Utils {
         public String branch;
         public String url;
         public String authType;
+        public String packages="org.projectnessie:nessie-deltalake:0.30.0,org.projectnessie:nessie-spark-3.2-extensions:0.30.0";
 
         public  Config(String[] args) {
             topic = args[0];
@@ -108,16 +111,14 @@ public class Utils {
         return conf;
     }
 
-    static public SparkSession decorateS3SparkSession(Utils.Config config) {
-        SparkSession spark = SparkSession.builder().master(config.master).
+    static public SparkSession.Builder decorateWithS3(Utils.Config config) {
+        return  SparkSession.builder().master(config.master).
                 config("spark.hadoop.fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
                 config("fs.s3a.access.key",config.s3AccessKey).
                 config("fs.s3a.secret.key",config.s3SecretKey).
                 config("fs.s3a.endpoint", config.s3EndPoint).
                 config("fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
-                config("fs.s3a.path.style.access","true").
-                getOrCreate();
-        return spark;
+                config("fs.s3a.path.style.access","true");
     }
     static public JavaInputDStream<ConsumerRecord<String, GenericRecord>> createStream(Utils.Config config,JavaStreamingContext ssc) {
 
@@ -140,6 +141,23 @@ public class Utils {
                 );
 
         return stream;
+    }
+
+    public static String extractFileName(ConsumerRecord<String, GenericRecord> record) {
+
+        String message = ""+record.value();
+        JsonObject jo = null;
+        try {
+            jo = JsonParser.parseString(message).getAsJsonObject();
+        } catch (IllegalStateException ei) {
+            String res="JSON CONTAINED NO PARSABLE FILENAME";
+            System.out.println(res);
+            return res;
+        }
+        String filename=jo.get("body").getAsJsonObject().get("name").getAsString();
+        System.out.println("Filename extraced from JSON=" + filename);
+
+        return filename;
     }
 
 
