@@ -25,36 +25,51 @@ import org.apache.spark.*;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.streaming.Trigger;
+import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.*;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class CsvToIceberg {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TimeoutException {
         Utils.Config config = new Utils.Config(args);
-        SparkSession.Builder sparkBuilder=  Utils.decorateWithS3(config);
+        SparkSession.Builder builder= SparkSession.builder().master(config.master);
+        Utils.decorateWithS3(builder,config);
+        Utils.decorateWithNessie(builder,config);
+
         //for a local spark instance
         SparkConf conf = new SparkConf()
                 .setAppName("CsvToIceberg")
                 .setMaster(config.master)
                 .set("spark.submit.deployMode", "cluster")
-                .set("spark.jars.packages", config.packages)
-                .set("spark.hadoop.nessie.url", config.url)
-                .set("spark.hadoop.nessie.ref", config.branch)
-                .set("spark.hadoop.nessie.authentication.type", config.authType)
-                .set("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-                .set("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension,org.projectnessie.spark.extensions.NessieSpark32SessionExtensions")
-                .set("spark.delta.logStore.class", "org.projectnessie.deltalake.NessieLogStore")
-                .set("spark.delta.logFileHandler.class", "org.projectnessie.deltalake.NessieLogFileMetaParser");
+                .set("spark.sql.streaming.schemaInference","true");
 
-        JavaStreamingContext ssc = new JavaStreamingContext(new SparkConf().setAppName("v20220620 spark 3.2.0 Streaming /event driven spark job"), new Duration(config.msIntervall));
-        SparkSession spark = sparkBuilder
+        SparkSession spark = builder
                 .master(config.master)
                 .config(conf)
                 .getOrCreate();
 
+        Dataset<Row> csvDF = spark
+                .readStream()
+                .option("sep", ",")
+                .option("header","true")
+  //              .schema(userSchema)      // Specify schema of the csv files
+                .format(config.fileFormat).load("s3://data/logdata");
+
+
+        csvDF.writeStream()
+                .format("iceberg")
+                .outputMode("append")
+                .trigger(Trigger.ProcessingTime(1, TimeUnit.MINUTES))
+                .option("path", "fromModermodemet")
+                .option("checkpointLocation", "/tmp")
+                .start();
 
     }
 }

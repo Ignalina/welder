@@ -18,6 +18,7 @@
  */
 
 package dk.ignalina.lab.spark332.base;
+import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.streaming.StreamingQuery;
@@ -26,6 +27,7 @@ import java.util.*;
 
 
 public class Utils {
+
 
     public static class Config {
         public String topic = "topic";
@@ -43,10 +45,14 @@ public class Utils {
         public Object autoOffsetReset="latest";
         public String s3AccessKey;
         public String s3SecretKey;
-        public String s3EndPoint;
+        public String s3EndPoint="http://10.1.1.68:9000";
         public String branch;
         public String url;
         public String authType;
+        public String fileFormat="csv";
+
+        public String inferSchemaFrom;
+
 
         public  Config(String[] args) {
             topic = args[0];
@@ -65,6 +71,8 @@ public class Utils {
             branch=args[13];
             url=args[14];
             authType=args[15];
+            fileFormat=args[16];
+            inferSchemaFrom=args[17];
         }
 
     }
@@ -76,8 +84,8 @@ public class Utils {
         return conf;
     }
 
-    static public SparkSession.Builder decorateWithS3(Utils.Config config) {
-        return  SparkSession.builder().master(config.master).
+    static public void  decorateWithS3(SparkSession.Builder builder,Utils.Config config) {
+          builder.
                 config("spark.hadoop.fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
                 config("fs.s3a.access.key",config.s3AccessKey).
                 config("fs.s3a.secret.key",config.s3SecretKey).
@@ -85,7 +93,18 @@ public class Utils {
                 config("fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
                 config("fs.s3a.path.style.access","true");
     }
-
+    static public void  decorateWithNessie(SparkSession.Builder builder,Utils.Config config) {
+        builder.config("spark.sql.catalog.nessie.uri", config.url)
+                .config("spark.sql.catalog.nessie.ref", config.branch)
+                .config("spark.hadoop.nessie.authentication.type", config.authType)
+                .config("spark.sql.catalog.nessie.catalog-impl=", "org.apache.iceberg.nessie.NessieCatalog")
+                .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.projectnessie.spark.extensions.NessieSparkSessionExtensions")
+                .config("spark.sql.catalog.nessie.warehouse","s3a://nessie-catalogue")
+                .config("spark.sql.catalog.nessie","org.apache.iceberg.spark.SparkCatalog")
+                .config("spark.sql.catalog.nessie.io-impl","org.apache.iceberg.aws.s3.S3FileIO")
+                .config("spark.sql.catalog.nessie.s3.endpoint",config.s3EndPoint)
+                .config("spark.sql.defaultCatalog","nessie");
+    }
 
 
 }
