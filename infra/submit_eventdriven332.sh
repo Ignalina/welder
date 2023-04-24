@@ -1,12 +1,14 @@
 #!/bin/bash
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 rm -rf /home/spark/.ivy2/cache
 export SPARK_HOME=/opt/spark-3.3.2-bin-hadoop3
 export VER=1.0-SNAPSHOT
 #wget https://nexus.x14.se/repository/maven-releases/dk/ignalina/lab/spark332/welder-iceberg-solr-job/${VER}/welder-iceberg-solr-job-${VER}.jar
 #wget https://s01.oss.sonatype.org/content/repositories/snapshots/dk/ignalina/lab/spark332/welder-iceberg-solr-job/${VER}/welder-iceberg-solr-job-${VER}
+#--conf "spark.jars.ivySettings=/home/spark/.ivy2/ivysettings.xml" \
 
 ${SPARK_HOME}/bin/spark-submit \
---conf "spark.jars.ivySettings=/home/spark/.ivy2/ivysettings.xml" \
+--conf "spark.executorEnv.JAVA_HOME=/usr/lib/jvm/java-11-openjdk" \
 --class dk.ignalina.lab.spark332.IcebergToSolr \
 --repositories https://nexus.x14.se/repository/maven-public,https://nexus.x14.se/repository/maven-releases,https://s01.oss.sonatype.org/content/repositories/snapshots \
 --packages org.projectnessie.nessie-integrations:nessie-spark-extensions-3.3_2.12:0.54.0,org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:1.2.0,software.amazon.awssdk:sts:2.20.18,software.amazon.awssdk:s3:2.20.18,software.amazon.awssdk:url-connection-client:2.20.18 \
