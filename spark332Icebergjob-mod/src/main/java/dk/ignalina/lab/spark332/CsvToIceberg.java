@@ -60,7 +60,7 @@ public class CsvToIceberg {
                 .option("sep", ",")
                 .option("header","true")
   //              .schema(userSchema)      // Specify schema of the csv files
-                .format(config.fileFormat).load("s3://data/logdata");
+                .format(config.fileFormat).load(config.slurpDirectory);
 
 
         csvDF.writeStream()

@@ -30,6 +30,7 @@ public class Utils {
 
 
     public static class Config {
+        public  String slurpDirectory;
         public String topic = "topic";
         public String format;
         public String bootstrap_servers = "10.1.1.90:9092";
@@ -73,6 +74,7 @@ public class Utils {
             authType=args[15];
             fileFormat=args[16];
             inferSchemaFrom=args[17];
+            slurpDirectory=args[18];
         }
 
     }
