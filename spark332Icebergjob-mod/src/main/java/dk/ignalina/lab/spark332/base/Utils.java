@@ -88,12 +88,11 @@ public class Utils {
 
     static public void  decorateWithS3(SparkSession.Builder builder,Utils.Config config) {
           builder.
+                config("spark.hadoop.fs.s3a.access.key",config.s3AccessKey).
+                config("spark.hadoop.fs.s3a.secret.key",config.s3SecretKey).
+                config("spark.hadoop.fs.s3a.endpoint", config.s3EndPoint).
                 config("spark.hadoop.fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
-                config("fs.s3a.access.key",config.s3AccessKey).
-                config("fs.s3a.secret.key",config.s3SecretKey).
-                config("fs.s3a.endpoint", config.s3EndPoint).
-                config("fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem").
-                config("fs.s3a.path.style.access","true");
+                config("spark.hadoop.fs.s3a.path.style.access","true");
     }
     static public void  decorateWithNessie(SparkSession.Builder builder,Utils.Config config) {
         builder.config("spark.sql.catalog.nessie.uri", config.url)
