@@ -25,6 +25,8 @@ import org.apache.spark.*;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.streaming.StreamingQuery;
+import org.apache.spark.sql.streaming.StreamingQueryException;
 import org.apache.spark.sql.streaming.Trigger;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
@@ -37,7 +39,7 @@ import java.util.concurrent.TimeoutException;
 public class CsvToIceberg {
 
 
-    public static void main(String[] args) throws TimeoutException {
+    public static void main(String[] args) throws TimeoutException, StreamingQueryException {
         Utils.Config config = new Utils.Config(args);
         SparkSession.Builder builder= SparkSession.builder().master(config.master);
 //        Utils.decorateWithS3(builder,config);
@@ -63,13 +65,14 @@ public class CsvToIceberg {
                 .format(config.fileFormat).load(config.slurpDirectory);
 
 
-        csvDF.writeStream()
+        StreamingQuery sq=csvDF.writeStream()
                 .format("iceberg")
                 .outputMode("append")
                 .trigger(Trigger.ProcessingTime(1, TimeUnit.MINUTES))
                 .option("path", "fromModermodemet")
                 .option("checkpointLocation", "/tmp")
                 .start();
-
+        
+        sq.awaitTermination();
     }
 }
