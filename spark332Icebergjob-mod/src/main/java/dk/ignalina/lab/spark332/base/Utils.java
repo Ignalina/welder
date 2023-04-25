@@ -134,5 +134,23 @@ public class Utils {
                 .getOrCreate();
 
     }
+    public static ForeachWriter<Row> saveToSolr() {
+        return new ForeachWriter<Row>() {
+
+            @Override public boolean open(long partitionId, long version) {
+                return true;
+            }
+
+            @Override
+            public void process(Row value) {
+                System.out.println("Processing took " + value.prettyJson());
+            }
+
+            @Override public void close(Throwable errorOrNull) {
+                // Close the connection
+            }
+        };
+
+    }
 
 }

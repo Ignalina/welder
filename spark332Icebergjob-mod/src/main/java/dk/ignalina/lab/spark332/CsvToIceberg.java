@@ -32,6 +32,7 @@ import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.*;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -57,7 +58,7 @@ public class CsvToIceberg {
                 .getOrCreate();
 
         userSchema=Utils.extractSchema(config.inferSchemaFrom,spark);
-//        spark.catalog().createTable(config.targetTable, );
+        spark.catalog().createTable(config.targetTable,"parquet", userSchema,new HashMap<String,String>());
         Dataset<Row> csvDF = spark
                 .readStream()
                 .option("sep", ",")

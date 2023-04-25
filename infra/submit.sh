@@ -17,7 +17,7 @@ ${SPARK_HOME}/bin/spark-submit \
 --deploy-mode cluster \
 --supervise \
 https://s01.oss.sonatype.org/content/repositories/snapshots/dk/ignalina/lab/spark332/welder-iceberg-solr-job/1.0-SNAPSHOT/welder-iceberg-solr-job-1.0-20230425.005802-8.jar \
-testar kafka 10.1.1.90:9092 10.1.1.90:8081 testar-value /tmp/spark/checkpoint latest PERMISSIVE 1000 groupid labb password 10.1.1.68:9000 main 10.1.1.93:19120 authtype csv s3a://data/piwik/piwik.csv s3a://data/piwik/landing &
+testar kafka 10.1.1.90:9092 10.1.1.90:8081 testar-value /tmp/spark/checkpoint latest PERMISSIVE 1000 groupid labb password 10.1.1.68:9000 main 10.1.1.93:19120 authtype csv s3a://data/piwik/piwik.csv s3a://data/piwik/landing piwik&
 
 #--packages dk.ignalina.lab.spark301:welder-spark-job:0.0.15,org.apache.spark:spark-streaming-kafka-0-10_2.12:3.0.1,org.apache.spark:spark-streaming_2.12:3.0.1 \
 
