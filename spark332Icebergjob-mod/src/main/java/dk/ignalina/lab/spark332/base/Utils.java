@@ -19,17 +19,15 @@
 
 package dk.ignalina.lab.spark332.base;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.sql.*;
-import org.apache.spark.sql.streaming.StreamingQuery;
-
-import java.util.*;
+import org.apache.spark.sql.types.StructType;
 
 
 public class Utils {
 
 
     public static class Config {
+        public final String targetTable;
         public  String slurpDirectory;
         public String topic = "topic";
         public String format;
@@ -75,12 +73,25 @@ public class Utils {
             fileFormat=args[16];
             inferSchemaFrom=args[17];
             slurpDirectory=args[18];
+            targetTable=args[19];
         }
 
     }
 
 
 
+    public static StructType extractSchema(String path, SparkSession spark) {
+        Dataset<Row> data = null;
+        if ( path.toLowerCase().endsWith("csv")) {
+            data = spark.read().csv(path);
+        } else if (path.toLowerCase().endsWith("parquet")) {
+            data = spark.read().parquet(path);
+        }
+        if (null!=data)
+           return data.schema();
+
+        return null;
+    }
     public static SparkConf CreateSparkConf(String appName) {
         SparkConf conf = new SparkConf().setAppName(appName);
         return conf;
@@ -107,5 +118,21 @@ public class Utils {
                 .config("spark.sql.defaultCatalog","nessie");
     }
 
+    static public SparkSession createSpark(String[] args,String applicationName) {
+        Utils.Config config = new Utils.Config(args);
+        SparkSession.Builder builder= SparkSession.builder().master(config.master);
+        //for a local spark instance
+        SparkConf conf = new SparkConf()
+                .setAppName(applicationName)
+                .setMaster(config.master)
+                .set("spark.submit.deployMode", "cluster")
+                .set("spark.sql.streaming.schemaInference","true");
+
+        return builder
+                .master(config.master)
+                .config(conf)
+                .getOrCreate();
+
+    }
 
 }

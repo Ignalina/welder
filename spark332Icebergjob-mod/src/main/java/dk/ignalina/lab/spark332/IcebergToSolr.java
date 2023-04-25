@@ -20,12 +20,32 @@
 package dk.ignalina.lab.spark332;
 
 
+import dk.ignalina.lab.spark332.base.Utils;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.function.VoidFunction2;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.streaming.StreamingQuery;
+
+import javax.xml.crypto.Data;
 
 public class IcebergToSolr {
 
 
     public static void main(String[] args) {
+       SparkSession spark=Utils.createSpark(args,"IcebergToSolr");
+
+        Dataset<Row> df = spark.readStream()
+                .format("iceberg")
+                .option("stream-from-timestamp", Long.toString(0))
+                .load("database.table_name");
+
+
+        df.show();
 
     }
 
 }
+
+

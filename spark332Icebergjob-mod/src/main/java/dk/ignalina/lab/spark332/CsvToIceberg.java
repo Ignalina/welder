@@ -39,12 +39,11 @@ import java.util.concurrent.TimeoutException;
 public class CsvToIceberg {
 
 
+    private static StructType userSchema;
+
     public static void main(String[] args) throws TimeoutException, StreamingQueryException {
         Utils.Config config = new Utils.Config(args);
         SparkSession.Builder builder= SparkSession.builder().master(config.master);
-//        Utils.decorateWithS3(builder,config);
-//        Utils.decorateWithNessie(builder,config);
-
         //for a local spark instance
         SparkConf conf = new SparkConf()
                 .setAppName("CsvToIceberg")
@@ -57,11 +56,13 @@ public class CsvToIceberg {
                 .config(conf)
                 .getOrCreate();
 
+        userSchema=Utils.extractSchema(config.inferSchemaFrom,spark);
+//        spark.catalog().createTable(config.targetTable, );
         Dataset<Row> csvDF = spark
                 .readStream()
                 .option("sep", ",")
                 .option("header","true")
-  //              .schema(userSchema)      // Specify schema of the csv files
+                .schema(userSchema)      // Specify schema of the csv files
                 .format(config.fileFormat).load(config.slurpDirectory);
 
 
@@ -69,10 +70,12 @@ public class CsvToIceberg {
                 .format("iceberg")
                 .outputMode("append")
                 .trigger(Trigger.ProcessingTime(1, TimeUnit.MINUTES))
-                .option("path", "fromModermodemet")
+                .option("path", config.targetTable)
                 .option("checkpointLocation", "/tmp")
                 .start();
-        
+
+
+
         sq.awaitTermination();
     }
 }
