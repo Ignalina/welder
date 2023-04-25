@@ -40,8 +40,8 @@ public class CsvToIceberg {
     public static void main(String[] args) throws TimeoutException {
         Utils.Config config = new Utils.Config(args);
         SparkSession.Builder builder= SparkSession.builder().master(config.master);
-        Utils.decorateWithS3(builder,config);
-        Utils.decorateWithNessie(builder,config);
+//        Utils.decorateWithS3(builder,config);
+//        Utils.decorateWithNessie(builder,config);
 
         //for a local spark instance
         SparkConf conf = new SparkConf()

@@ -7,6 +7,7 @@ export VER=1.0-SNAPSHOT
 #wget https://s01.oss.sonatype.org/content/repositories/snapshots/dk/ignalina/lab/spark332/welder-iceberg-solr-job/${VER}/welder-iceberg-solr-job-${VER}
 #--repositories https://nexus.x14.se/repository/maven-public,https://nexus.x14.se/repository/maven-releases,https://s01.oss.sonatype.org/content/repositories/snapshots \
 #--conf "spark.jars.ivySettings=/home/spark/.ivy2/ivysettings.xml" \
+#--properties-file spark-defaults.properties
 
 
 ${SPARK_HOME}/bin/spark-submit \
@@ -25,7 +26,7 @@ ${SPARK_HOME}/bin/spark-submit \
 --verbose \
 --deploy-mode cluster \
 --supervise \
-https://s01.oss.sonatype.org/content/repositories/snapshots/dk/ignalina/lab/spark332/welder-iceberg-solr-job/1.0-SNAPSHOT/welder-iceberg-solr-job-1.0-20230424.201222-5.jar \
+https://s01.oss.sonatype.org/content/repositories/snapshots/dk/ignalina/lab/spark332/welder-iceberg-solr-job/1.0-SNAPSHOT/welder-iceberg-solr-job-1.0-20230425.000405-6.jar \
 testar kafka 10.1.1.90:9092 10.1.1.90:8081 testar-value /tmp/spark/checkpoint latest PERMISSIVE 1000 groupid labb password 10.1.1.68:9000 main 10.1.1.93:19120 authtype csv s3a://data/piwik/piwik.csv s3a://data/piwik/landing &
 
 #--packages dk.ignalina.lab.spark301:welder-spark-job:0.0.15,org.apache.spark:spark-streaming-kafka-0-10_2.12:3.0.1,org.apache.spark:spark-streaming_2.12:3.0.1 \
